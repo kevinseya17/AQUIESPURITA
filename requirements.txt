@@ -1,0 +1,31 @@
+Django==5.1.7
+
+# Producción
+gunicorn==21.2.0
+whitenoise==6.7.0
+psycopg2-binary==2.9.9
+dj-database-url==2.1.0
+python-decouple==3.8
+
+# PDFs (LO IMPORTANTE)
+reportlab==4.4.4
+xhtml2pdf==0.2.11
+python-bidi==0.4.2
+arabic-reshaper==3.0.0
+pyHanko==0.31.0
+pyhanko-certvalidator==0.29.0
+pypdf==6.1.3
+
+# Imágenes / QR
+pillow==11.2.1
+qrcode==8.2
+
+# Excel
+openpyxl==3.1.5
+
+# HTTP
+requests==2.32.5
+
+# Cloudinary
+cloudinary==1.41.0
+django-cloudinary-storage==0.3.0
