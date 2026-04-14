@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+
+# Django
+*.log
+db.sqlite3
+media/
+staticfiles/
+
+# Variables de entorno — NUNCA subir esto
+.env
+*.env
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo

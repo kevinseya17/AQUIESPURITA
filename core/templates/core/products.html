@@ -1,0 +1,262 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- Fondo fijo -->
+<div class="fixed-background" style="background-image: url('{% static 'core/img/vacas.png' %}');"></div>
+
+<!-- Contenedor principal -->
+<div class="products-container">
+    <!-- Encabezado con título y barra de búsqueda -->
+    <div class="products-header">
+        <div class="header-content">
+            <h3 class="category-title">Productos: {% if categoria %}{{ categoria.nombre }}{% else %}Todos{% endif %}</h3>
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Buscar productos..." class="form-control">
+                <button class="search-button" id="search-btn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grid de productos -->
+    <div class="products-scroll-container">
+        <div class="products-grid" id="products-grid">
+            {% for producto in productos %}
+            <div class="product-card" 
+                 data-name="{{ producto.nombre|lower }}" 
+                 data-category="{{ producto.categoria.nombre|lower }}" 
+                 data-description="{{ producto.descripcion|lower }}">
+                 
+                <a href="{% url 'product_detail' producto.id %}">
+                    {% if producto.imagen %}
+                    <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="product-image">
+                    {% else %}
+                    <img src="{% static 'core/img/default.png' %}" class="product-image" alt="Imagen por defecto">
+                    {% endif %}
+                </a>
+
+                <div class="product-info">
+                    <h5 class="product-name">
+                        <a href="{% url 'product_detail' producto.id %}" style="text-decoration: none; color: inherit;">
+                            {{ producto.nombre }}
+                        </a>
+                    </h5>
+                    <p><strong>Precio:</strong> ${{ producto.precio|floatformat:2 }}</p>
+                    <p><strong>Categoría:</strong> <span class="product-category">{{ producto.categoria.nombre }}</span></p>
+                    <p><strong>Unidades Disponibles:</strong> {{ producto.cantidad }}</p>
+                    <p class="product-description">{{ producto.descripcion|truncatechars:100 }}</p>
+                    
+                    <a href="{% url 'add_to_cart' producto.id %}" class="btn btn-success mt-2">
+                        <i class="fas fa-cart-plus"></i> Agregar al carrito
+                    </a>
+                    <!-- 👇 nuevo botón de ver detalles -->
+                    <a href="{% url 'product_detail' producto.id %}" class="btn btn-primary mt-2">
+                        <i class="fas fa-info-circle"></i> Ver detalles
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="no-products" style="display: none;">
+                <p>No se encontraron productos{% if categoria %} en la categoría {{ categoria.nombre }}{% endif %}.</p>
+                <a href="{% url 'products' %}" class="btn btn-primary">Ver todos los productos</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Estilos -->
+<style>
+.fixed-background {
+    position: fixed;
+    top: 0; 
+    left: 0;
+    width: 100%; 
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1;
+    background-attachment: fixed;
+    opacity: 0.7;
+}
+
+.products-container {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    box-shadow: 0 0 25px rgba(0,0,0,0.2);
+    margin: 20px auto;
+    max-width: 90%;
+    padding: 20px;
+    min-height: 80vh;
+}
+
+.products-header {
+    margin-bottom: 30px;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.category-title {
+    color: #2c3e50;
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 400px;
+    width: 100%;
+}
+
+.search-bar input {
+    flex: 1;
+    padding: 8px 15px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    transition: border-color 0.3s;
+}
+
+.search-bar input:focus {
+    outline: none;
+    border-color: #4CAF50;
+}
+
+.search-button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: background 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-button:hover {
+    background: #3e8e41;
+}
+
+.products-scroll-container {
+    max-height: 70vh;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 5px;
+}
+
+.product-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.product-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image {
+    transform: scale(1.03);
+}
+
+.product-info {
+    padding: 15px;
+}
+
+.product-info h5 {
+    color: #4CAF50;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+.product-info p {
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.product-info p strong {
+    color: #333;
+}
+
+.product-description {
+    color: #666;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+.no-products {
+    text-align: center;
+    grid-column: 1 / -1;
+    padding: 40px 20px;
+    color: #888;
+    font-size: 1.1rem;
+}
+
+.no-products .btn {
+    margin-top: 15px;
+    background-color: #4CAF50;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.no-products .btn:hover {
+    background-color: #3e8e41;
+}
+</style>
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search-input');
+    const productCards = document.querySelectorAll('.product-card');
+    
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        
+        productCards.forEach(card => {
+            const productName = card.querySelector('h5').textContent.toLowerCase();
+            if(productName.includes(searchTerm)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
+{% endblock %}

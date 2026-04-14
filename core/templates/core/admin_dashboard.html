@@ -1,0 +1,168 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse shadow">
+            <div class="position-sticky pt-3">
+                <h5 class="px-3">Panel de Administración</h5>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'admin_dashboard' %}">
+                            <i class="fas fa-tachometer-alt"></i> Panel administrativo
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'admin_usuarios' %}">
+                            <i class="fas fa-users"></i> Usuarios
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'admin_productos' %}">
+                            <i class="fas fa-boxes"></i> Productos
+                        </a>
+                    </li>
+
+                    <!-- 📊 Nuevo enlace al reporte diario -->
+                    {% if user.is_staff or user.is_superuser %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'reporte_diario' %}">
+                            <i class="fas fa-chart-line"></i> Reporte / Cuadre Diario
+                        </a>
+                    </li>
+
+                       <!-- 🧾 LOG de Auditoría (nuevo) -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'log_auditoria' %}">
+                            <i class="fas fa-clipboard-list"></i> LOG de Auditoría
+                        </a>
+                    </li>
+
+                    {% endif %}
+                </ul>
+
+                <hr>
+
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button class="btn btn-outline-danger w-100">
+                        <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+                    </button>
+                </form>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                <h1 class="h2">Bienvenido, {{ request.user.username }}</h1>
+            </div>
+
+            <div class="alert alert-info shadow-sm" role="alert">
+                Aquí puedes gestionar usuarios, productos y próximamente más funciones administrativas.
+            </div>
+
+            <!-- Estadísticas -->
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Total de usuarios</h5>
+                            <p class="card-text display-6">{{ total_usuarios }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Productos activos</h5>
+                            <p class="card-text display-6">{{ total_productos }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Valor total del inventario:</h5>
+                            <p class="card-text display-6">${{ valor_total_inventario|floatformat:2 }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Categorías</h5>
+                            <p class="card-text display-6">{{ total_categorias }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabla de últimos usuarios -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Últimos usuarios registrados</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Usuario</th>
+                                    <th>Nombre</th>
+                                    <th>Apellido</th>
+                                    <th>Correo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for usuario in ultimos_usuarios %}
+                                <tr>
+                                    <td>{{ usuario.username }}</td>
+                                    <td>{{ usuario.first_name }}</td>
+                                    <td>{{ usuario.last_name }}</td>
+                                    <td>{{ usuario.email }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr><td colspan="4">No hay usuarios recientes.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabla de últimos productos -->
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Últimos productos agregados</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Precio</th>
+                                    <th>Descripción</th>
+                                    <th>Categoría</th>
+                                    <th>Cantidad</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for producto in ultimos_productos %}
+                                <tr>
+                                    <td>{{ producto.nombre }}</td>
+                                    <td>${{ producto.precio|floatformat:2 }}</td>
+                                    <td>{{ producto.descripcion }}</td>
+                                    <td>{{ producto.categoria.nombre }}</td>
+                                    <td>{{ producto.cantidad }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr><td colspan="5">No hay productos recientes.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %}

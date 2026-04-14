@@ -1,0 +1,274 @@
+/* ============================
+   reset básico
+============================ */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* ============================
+   navbar
+============================ */
+.navbar-nav {
+    display: flex;
+    list-style-type: none;
+    padding: 0;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.navbar-nav li {
+    margin: 0 10px;
+}
+
+.nav-right-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    padding-top: 60px; /* espacio para navbar fija */
+}
+
+
+/* ============================
+   dropdown de usuario
+============================ */
+.user-dropdown {
+    position: relative;
+    display: inline-block;
+    margin-left: auto; /* Empuja el dropdown a la derecha */
+}
+
+.user-dropbtn {
+    background-color: transparent;
+    color: #4CAF50;
+    padding: 8px 15px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.user-dropbtn:hover {
+    color: #3e8e41;
+}
+
+.user-dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    border-radius: 5px;
+}
+
+.user-dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.user-dropdown-content a:hover {
+    background-color: #f1f1f1;
+    border-radius: 5px;
+}
+
+.user-dropdown:hover .user-dropdown-content {
+    display: block;
+}
+
+/* ============================
+   dropdown de productos
+============================ */
+.product-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.product-dropdown .user-dropbtn {
+    background-color: transparent;
+    color: #4CAF50;
+    padding: 8px 15px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.product-dropdown .user-dropbtn:hover {
+    color: #3e8e41;
+}
+
+.product-dropdown .user-dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    border-radius: 5px;
+}
+
+.product-dropdown .user-dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.product-dropdown .user-dropdown-content a:hover {
+    background-color: #f1f1f1;
+    border-radius: 5px;
+}
+
+.product-dropdown:hover .user-dropdown-content {
+    display: block;
+}
+
+/* ============================
+   alertas de admin
+============================ */
+.admin-alert {
+    border-left: 5px solid #dc3545;
+    background-color: #fff3f3;
+}
+
+/* ============================
+   icono de notificaciones
+============================ */
+.notification-icon {
+    position: relative;
+}
+
+.notification-bell {
+    color: #6c757d;
+    font-size: 1.2rem;
+    transition: all 0.3s;
+}
+
+.notification-bell:hover {
+    color: #ffc107;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    font-size: 0.6rem;
+    padding: 0.25em 0.4em;
+    border-radius: 50%;
+    background-color: #dc3545;
+    color: white;
+}
+
+/* ============================
+   fondo y contenedor del login
+============================ */
+.login-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1;
+}
+
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0; /* Color de respaldo */
+    background-image: url('{% static "core/img/fondo_de_inicio.jpg" %}');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 20px;
+}
+
+/* ============================
+   tarjeta de login
+============================ */
+.login-card {
+    background-color: rgba(255, 255, 255, 0.85); /* Ajusta la transparencia aquí */
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px);
+    width: 100%;
+    max-width: 450px;
+}
+
+.login-card .form-control {
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.login-card .form-control:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.login-card .card-title {
+    color: #2c3e50;
+    font-weight: 600;
+    font-size: 1.8rem;
+}
+
+.login-card .btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s;
+    background-color: #4CAF50; /* Fondo sólido */
+    border: 1px solid #4CAF50; /* Borde sólido */
+    color: white; /* Texto blanco */
+    margin-right: 10px; /* Espacio entre botones */
+}
+
+.login-card .btn-primary {
+    background-color: #4CAF50;
+    border-color: #4CAF50;
+}
+
+.login-card .btn:hover {
+    background-color: #3e8e41; /* Fondo más oscuro al pasar el mouse */
+    border-color: #3e8e41;
+    color: white; /* Asegurar que el texto se mantenga visible */
+}
+
+/* ============================
+   overlay del login
+============================ */
+.login-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 0;
+}
+
+.login-content {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 60px; /* Espacio para la navbar */
+    z-index: 1;
+}

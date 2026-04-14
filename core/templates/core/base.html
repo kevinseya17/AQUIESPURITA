@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'core/css/estilos.css' %}">
+    <title>Lacteos Aqui Es Purita</title>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+            <div class="container-fluid">
+                {% load static %}
+                <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+                    <img src="{% static 'core/img/logo.png' %}" 
+                       alt="Logo Lacteos" 
+                       class="me-2" 
+                       style="height: 40px;">
+                    Lácteos Aquí Es Purita
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Inicio</a>
+                        </li>
+                        
+                        {% if request.user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Nosotros</a>
+                            </li>
+                            <li class="nav-item product-dropdown">
+                                <button class="user-dropbtn">
+                                    <i class="fas fa-box"></i>
+                                    <span>Productos</span>
+                                </button>
+                                <div class="user-dropdown-content">
+                                    <a href="{% url 'products' %}?categoria=lacteos">Lácteos</a>
+                                    <a href="{% url 'products' %}?categoria=yogures">Yogures</a>
+                                    <a href="{% url 'products' %}?categoria=quesos">Quesos</a>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'cart_detail' %}">
+                                    <i class="fas fa-shopping-cart"></i>
+                                
+                                    <span class="badge bg-primary">
+                                        {{ request.session.cart|length }}
+                                    </span>
+                                </a>
+                            </li>
+                        {% endif %}
+                        
+                        <div class="nav-right-section">
+                            {% if request.user.is_authenticated %}
+                                {% if user.is_superuser %}
+                                    <div class="notification-icon">
+                                        <a href="#" class="notification-bell" title="Notificaciones">
+                                            <i class="fas fa-bell"></i>
+                                            <span class="notification-badge">0</span>
+                                        </a>
+                                    </div>
+                                {% endif %}
+                                
+                                <li class="nav-item user-dropdown">
+                                    <button class="user-dropbtn">
+                                        <i class="fas fa-user-circle"></i>
+                                        <span>Mi cuenta</span>
+                                    </button>
+                                    <div class="user-dropdown-content">
+                                        <a href="{% url 'perfil' %}">Perfil</a>
+                                        <form method="post" action="{% url 'logout' %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="dropdown-item" style="width: 100%; text-align: left; background: none; border: none; cursor: pointer;">
+                                                Cerrar sesión
+                                            </button>
+                                        </form>
+                                    </div>
+                                </li>
+                            {% else %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'login' %}">Ingresar</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'register' %}">Registrarse</a>
+                                </li>
+                            {% endif %}
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

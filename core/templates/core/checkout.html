@@ -1,0 +1,166 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="row g-4">
+                
+                <!-- Columna izquierda: formulario -->
+                <div class="col-lg-7">
+                    <div class="card shadow-lg border-0 rounded-4">
+                        <div class="card-body p-5">
+                            <h2 class="fw-bold text-center mb-4">💳 Finalizar compra</h2>
+
+                            <form method="post" action="{% url 'procesar_pago' %}" class="needs-validation" novalidate>
+                                {% csrf_token %}
+
+                                <!-- Datos de envío -->
+                                <h5 class="mb-3">📦 Datos de envío</h5>
+                                <div class="row g-3 mb-4">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Nombre completo</label>
+                                        <input type="text" name="nombre" class="form-control rounded-pill" required>
+                                        <div class="invalid-feedback">Por favor ingresa tu nombre completo.</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Correo electrónico</label>
+                                        <input type="email" name="email" class="form-control rounded-pill" required>
+                                        <div class="invalid-feedback">Ingresa un correo válido.</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Teléfono</label>
+                                        <input type="text" name="telefono" class="form-control rounded-pill" required>
+                                        <div class="invalid-feedback">Por favor ingresa tu número de teléfono.</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Dirección</label>
+                                        <input type="text" name="direccion" class="form-control rounded-pill" required>
+                                        <div class="invalid-feedback">Por favor ingresa tu dirección.</div>
+                                    </div>
+                                </div>
+
+                                <!-- Método de pago -->
+                                <h5 class="mb-3">💰 Método de pago</h5>
+                                <div class="mb-4">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="radio" name="metodo_pago" value="tarjeta" checked>
+                                        <label class="form-check-label">Tarjeta de crédito / débito</label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="radio" name="metodo_pago" value="efectivo">
+                                        <label class="form-check-label">Pago contra entrega</label>
+                                    </div>
+                                </div>
+
+                                <!-- Datos tarjeta -->
+                                <div id="tarjeta-section" class="fade-section">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Número de tarjeta</label>
+                                            <input type="text" name="numero_tarjeta" class="form-control rounded-pill" placeholder="xxxx xxxx xxxx xxxx">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Expira</label>
+                                            <input type="text" name="expira" class="form-control rounded-pill" placeholder="MM/AA">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">CVV</label>
+                                            <input type="text" name="cvv" class="form-control rounded-pill" placeholder="***">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Botón confirmar -->
+                                <div class="d-grid mt-5">
+                                    <button type="submit" class="btn btn-success btn-lg rounded-pill shadow-sm">
+                                        ✅ Confirmar y pagar ${{ total }}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna derecha: resumen -->
+                <div class="col-lg-5">
+                    <div class="card shadow-lg border-0 rounded-4 h-100">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold mb-3">🛒 Resumen de tu compra</h5>
+                            <div class="scrollable-summary">
+                                {% for item in cart_items %}
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>{{ item.producto.nombre }} (x{{ item.cantidad }})</span>
+                                        <span class="fw-semibold">${{ item.subtotal }}</span>
+                                    </div>
+                                {% empty %}
+                                    <p>No tienes productos en el carrito.</p>
+                                {% endfor %}
+                            </div>
+                            <hr>
+                            <p class="fw-bold fs-5 text-end">Total: ${{ total }}</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+input.form-control {
+    padding: 10px 15px;
+}
+.fade-section {
+    transition: all 0.3s ease-in-out;
+}
+.scrollable-summary {
+    max-height: 250px;
+    overflow-y: auto;
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const tarjetaSection = document.getElementById("tarjeta-section");
+    const radios = document.querySelectorAll("input[name='metodo_pago']");
+
+    radios.forEach(radio => {
+        radio.addEventListener("change", () => {
+            if (radio.value === "tarjeta") {
+                tarjetaSection.style.display = "block";
+            } else {
+                tarjetaSection.style.display = "none";
+            }
+        });
+    });
+
+    // Ocultar si está seleccionado "efectivo" al cargar
+    if (document.querySelector("input[name='metodo_pago']:checked").value !== "tarjeta") {
+        tarjetaSection.style.display = "none";
+    }
+
+    // Validación bootstrap
+    const forms = document.querySelectorAll('.needs-validation')
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+            form.classList.add('was-validated')
+        }, false)
+    })
+});
+</script>
+{% endblock %}
+

@@ -1,0 +1,224 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-4">
+            <h2 class="fw-bold text-center mb-4">📊 Informe de Ventas</h2>
+
+            <!-- 🔍 FILTRO DE FECHAS -->
+            <form method="get" class="d-flex flex-wrap justify-content-center align-items-end gap-3 mb-4">
+                <div>
+                    <label class="form-label mb-1">Desde</label>
+                    <input type="date" name="inicio" value="{{ fecha_inicio }}" class="form-control rounded-pill">
+                </div>
+                <div>
+                    <label class="form-label mb-1">Hasta</label>
+                    <input type="date" name="fin" value="{{ fecha_fin }}" class="form-control rounded-pill">
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary rounded-pill shadow-sm px-4">Filtrar</button>
+                    <a href="{% url 'reporte_diario' %}" class="btn btn-outline-secondary rounded-pill px-4">Limpiar</a>
+                </div>
+            </form>
+
+            <div class="text-center mb-4">
+                {% if fecha_inicio and fecha_fin %}
+                    <h5 class="text-muted">Periodo: {{ fecha_inicio }} → {{ fecha_fin }}</h5>
+                {% else %}
+                    <h5 class="text-muted">Fecha: {{ fecha|date:"d/m/Y" }}</h5>
+                {% endif %}
+            </div>
+
+            <!-- MÉTRICAS PRINCIPALES -->
+            <div class="row text-center mb-4">
+                <div class="col-md-4">
+                    <div class="p-3 bg-light rounded-3 shadow-sm">
+                        <h6 class="text-muted mb-1">Total de pedidos</h6>
+                        <h3 class="fw-bold text-primary">{{ total_pedidos }}</h3>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 bg-light rounded-3 shadow-sm">
+                        <h6 class="text-muted mb-1">Total vendido</h6>
+                        <h3 class="fw-bold text-success">${{ total_vendido }}</h3>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 bg-light rounded-3 shadow-sm">
+                        <h6 class="text-muted mb-1">Métodos de pago</h6>
+                        <ul class="list-unstyled mb-0">
+                            {% for metodo in metodos_pago %}
+                                <li>{{ metodo.metodo_pago|capfirst }}: 
+                                    <strong>${{ metodo.total }}</strong> 
+                                    ({{ metodo.cantidad|default:"-" }} pedidos)
+                                </li>
+                            {% empty %}
+                                <li>No hay ventas registradas.</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="my-4">
+
+            <!-- 🧭 GRÁFICAS -->
+            <div class="row text-center mb-5">
+                <div class="col-md-4 mb-4">
+                    <h6 class="text-muted">Ventas por Método de Pago</h6>
+                    <canvas id="barChart"></canvas>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h6 class="text-muted">Estados de Pedido</h6>
+                    <canvas id="pieChart"></canvas>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h6 class="text-muted">Ventas por Día</h6>
+                    <canvas id="lineChart"></canvas>
+                </div>
+            </div>
+
+            <hr class="my-4">
+
+            <!-- TABLA DETALLE -->
+            <h4 class="fw-bold mb-3">🧾 Detalle de pedidos</h4>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Cliente</th>
+                            <th>Método de pago</th>
+                            <th>Estado</th>
+                            <th>Fecha</th>
+                            <th class="text-end">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for venta in ventas %}
+                            <tr>
+                                <td>#{{ venta.id }}</td>
+                                <td>{{ venta.nombre }}</td>
+                                <td>{{ venta.metodo_pago|capfirst }}</td>
+                                <td>
+                                    {% if venta.estado == 'pagado' %}
+                                        <span class="badge bg-success">Pagado</span>
+                                    {% elif venta.estado == 'pendiente' %}
+                                        <span class="badge bg-warning text-dark">Pendiente</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Cancelado</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ venta.fecha|date:"d/m/Y H:i" }}</td>
+                                <td class="text-end fw-bold">${{ venta.total }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">
+                                    No hay pedidos registrados en este periodo.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- BOTONES FINALES -->
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary rounded-pill">⬅ Volver al panel</a>
+                <div>
+                    <a href="{% url 'reporte_diario_pdf' %}?inicio={{ fecha_inicio }}&fin={{ fecha_fin }}" 
+                       class="btn btn-outline-danger rounded-pill me-2">📄 Exportar PDF</a>
+
+                    <a href="{% url 'reporte_diario_excel' %}?inicio={{ fecha_inicio }}&fin={{ fecha_fin }}" 
+                       class="btn btn-outline-success rounded-pill">📊 Exportar Excel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================= -->
+<!-- 📊 CHART.JS INTEGRACIÓN -->
+<!-- ============================= -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Pasamos los datos del backend de forma segura -->
+{{ metodos_pago|json_script:"metodos-pago-data" }}
+{{ estados|json_script:"estados-data" }}
+{{ ventas_por_dia|json_script:"ventas-dia-data" }}
+
+<script>
+    // Cargar los datos del backend
+    const metodosPago = JSON.parse(document.getElementById('metodos-pago-data').textContent);
+    const estados = JSON.parse(document.getElementById('estados-data').textContent);
+    const ventasPorDia = JSON.parse(document.getElementById('ventas-dia-data').textContent);
+
+    console.log("💳 Métodos de pago:", metodosPago);
+    console.log("📦 Estados:", estados);
+    console.log("📅 Ventas por día:", ventasPorDia);
+
+    // === Gráfico de Barras: Métodos de Pago ===
+    if (metodosPago.length > 0) {
+        new Chart(document.getElementById('barChart'), {
+            type: 'bar',
+            data: {
+                labels: metodosPago.map(m => m.metodo_pago),
+                datasets: [{
+                    label: 'Ventas ($)',
+                    data: metodosPago.map(m => m.total),
+                    backgroundColor: '#3B82F6',
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+    }
+
+    // === Gráfico de Pastel: Estados de Pedido ===
+    if (estados.length > 0) {
+        new Chart(document.getElementById('pieChart'), {
+            type: 'pie',
+            data: {
+                labels: estados.map(e => e.estado),
+                datasets: [{
+                    data: estados.map(e => e.total),
+                    backgroundColor: ['#22C55E', '#EAB308', '#EF4444']
+                }]
+            },
+            options: { responsive: true }
+        });
+    }
+
+    // === Gráfico de Línea: Ventas por Día ===
+    if (ventasPorDia.length > 0) {
+        new Chart(document.getElementById('lineChart'), {
+            type: 'line',
+            data: {
+                labels: ventasPorDia.map(v => v.fecha_simple),
+                datasets: [{
+                    label: 'Total diario ($)',
+                    data: ventasPorDia.map(v => v.total),
+                    borderColor: '#2563EB',
+                    backgroundColor: 'rgba(37,99,235,0.2)',
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+    }
+</script>
+
+{% endblock %}
+

@@ -1,0 +1,67 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                <div class="row g-0">
+                    <!-- Imagen del producto -->
+                    <div class="col-md-6 bg-light d-flex align-items-center justify-content-center p-3">
+                        {% if producto.imagen %}
+                            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="img-fluid rounded-3" style="max-height: 350px; object-fit: contain;">
+                        {% else %}
+                            <img src="{% static 'core/img/default.png' %}" alt="Imagen por defecto" class="img-fluid rounded-3" style="max-height: 350px; object-fit: contain;">
+                        {% endif %}
+                    </div>
+
+                    <!-- Información del producto -->
+                    <div class="col-md-6 p-4 d-flex flex-column">
+                        <h2 class="fw-bold text-dark mb-3">{{ producto.nombre }}</h2>
+                        <p class="text-muted small">{{ producto.descripcion }}</p>
+
+                        <h4 class="text-success fw-bold mb-3">$ {{ producto.precio|floatformat:2 }}</h4>
+                        <p><strong>Categoría:</strong> {{ producto.categoria.nombre }}</p>
+
+                        {% if producto.cantidad > 0 %}
+                            <p class="text-success"><strong>Disponibles:</strong> {{ producto.cantidad }}</p>
+                        {% else %}
+                            <p class="text-danger"><strong>Agotado</strong></p>
+                        {% endif %}
+
+                        <!-- Botones -->
+                        <div class="mt-auto">
+                            {% if producto.cantidad > 0 %}
+                                <a href="{% url 'add_to_cart' producto.id %}" class="btn btn-success btn-lg w-100 mb-2">
+                                    🛒 Comprar / Agregar al carrito
+                                </a>
+                            {% endif %}
+                            <a href="{% url 'products' %}" class="btn btn-outline-secondary btn-lg w-100">
+                                🔙 Seguir comprando
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+</div>
+
+<!-- Estilos adicionales -->
+<style>
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+}
+h2 {
+    font-size: 1.8rem;
+}
+h4 {
+    font-size: 1.5rem;
+}
+</style>
+{% endblock %}

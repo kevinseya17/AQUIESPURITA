@@ -1,0 +1,24 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+<h3>Inicio</h3>
+
+{% if request.user.is_authenticated %}
+    <hr>
+    <h4>
+        {{ request.user.username | upper }}, Bienvenid@
+    </h4>
+
+    {% if request.user.is_superuser or request.user.is_staff %}
+        <p>Estás viendo el panel de administrador.</p>
+        <a href="{% url 'admin_dashboard' %}">Ir al Panel de Administración</a>
+    {% else %}
+        <p>Bienvenido a Lacteos Aquí Es Purita</p>
+    {% endif %}
+{% else %}
+    <p>Por favor inicia sesión para continuar.</p>
+{% endif %}
+
+
+{% endblock %}

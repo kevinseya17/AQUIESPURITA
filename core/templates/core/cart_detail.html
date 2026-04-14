@@ -1,0 +1,92 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="card shadow-lg border-0 rounded-4">
+        <!-- encabezado -->
+        <div class="card-header bg-primary text-white d-flex align-items-center rounded-top-4">
+            <i class="fas fa-shopping-cart fa-lg me-2"></i>
+            <h4 class="mb-0">Carrito de compras</h4>
+        </div>
+
+        <div class="card-body">
+            {% if cart.carrito %}
+                <div class="row g-4">
+                    <!-- productos -->
+                    <div class="col-lg-8">
+                        {% for item in cart %}
+                        <div class="d-flex align-items-center border rounded-3 p-3 mb-3 shadow-sm">
+                            <!-- imagen -->
+                            <div style="width: 120px; height: 120px; flex-shrink: 0;">
+                                {% if item.producto.imagen %}
+                                    <img src="{{ item.producto.imagen.url }}" alt="{{ item.producto.nombre }}" class="img-fluid rounded-3 h-100 w-100 object-fit-cover">
+                                {% else %}
+                                    <img src="{% static 'core/img/default.png' %}" alt="sin imagen" class="img-fluid rounded-3 h-100 w-100 object-fit-cover">
+                                {% endif %}
+                            </div>
+
+                            <!-- info -->
+                            <div class="ms-3 flex-grow-1">
+                                <h5 class="fw-bold mb-1">{{ item.producto.nombre }}</h5>
+                                <p class="mb-1 text-muted">Precio: ${{ item.producto.precio|floatformat:2 }}</p>
+                                <p class="mb-1">Cantidad: <span class="fw-bold">{{ item.cantidad }}</span></p>
+                                <p class="mb-2 text-success">Subtotal: ${{ item.subtotal|floatformat:2 }}</p>
+
+                                <!-- acciones -->
+                                <div class="d-flex gap-2">
+                                    <a href="{% url 'add_to_cart' item.producto.id %}" class="btn btn-success btn-sm">
+                                        <i class="fas fa-plus"></i>
+                                    </a>
+                                    <a href="{% url 'decrease_from_cart' item.producto.id %}" class="btn btn-warning btn-sm">
+                                        <i class="fas fa-minus"></i>
+                                    </a>
+                                    <a href="{% url 'remove_from_cart' item.producto.id %}" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- resumen -->
+                    <div class="col-lg-4">
+                        <div class="card border-0 shadow-sm rounded-3 p-3">
+                            <h5 class="fw-bold">Resumen de compra</h5>
+                            <hr>
+                            <p class="d-flex justify-content-between">
+                                <span>Total:</span>
+                                <span class="fw-bold text-primary fs-5">${{ total|floatformat:2 }}</span>
+                            </p>
+                            <div class="d-grid gap-2 mt-3">
+                                <a href="{% url 'checkout' %}" class="btn btn-success btn-lg">
+                                    ✅ Finalizar compra
+                                </a>
+                                <a href="{% url 'clear_cart' %}" class="btn btn-outline-danger btn-sm">
+                                    Vaciar carrito
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <!-- estado vacío -->
+                <div class="text-center py-5">
+                    <h4 class="mb-3">🛒 Tu carrito está vacío</h4>
+                    <a href="{% url 'products' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-store"></i> Ver productos
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+.object-fit-cover {
+    object-fit: cover;
+}
+</style>
+{% endblock %}
+

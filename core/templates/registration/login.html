@@ -1,0 +1,28 @@
+{% extends 'core/base.html' %}
+{% load static crispy_forms_tags %}
+
+{% block content %}
+<div class="login-background" style="background-image: url('{% static 'core/img/fondo_de_inicio.jpg' %}');">
+    <div class="login-overlay"></div>
+    <div class="login-content">
+        <div class="login-form-container">
+            <form action="" method="post">
+                {% csrf_token %}
+                <div class="card login-card">
+                    <div class="card-body">
+                        <h5 class="card-title text-center mb-4">Inicio de Sesión</h5>
+                        {{ form | crispy }}
+                        <div class="d-flex justify-content-between mt-4">
+                            <div>
+                                <a href="{% url 'home' %}" class="btn btn-outline-light">Inicio</a>
+                                <a href="{% url 'register' %}" class="btn btn-outline-light ms-2">Registrarse</a>
+                            </div>
+                            <button class="btn btn-success" type="submit">Iniciar Sesión</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

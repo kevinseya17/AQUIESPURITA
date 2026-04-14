@@ -1,0 +1,18 @@
+<div class="text-center">
+    <h3>{{ producto.nombre }}</h3>
+
+    {% if producto.imagen %}
+        <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="img-fluid mb-3">
+    {% else %}
+        <img src="{% static 'core/img/default.png' %}" alt="Imagen por defecto" class="img-fluid mb-3">
+    {% endif %}
+
+    <p><strong>Precio:</strong> ${{ producto.precio }}</p>
+    <p><strong>Categoría:</strong> {{ producto.categoria.nombre }}</p>
+    <p><strong>Disponibles:</strong> {{ producto.cantidad }}</p>
+    <p>{{ producto.descripcion }}</p>
+
+    <a href="{% url 'add_to_cart' producto.id %}" class="btn btn-success">
+        🛒 Comprar
+    </a>
+</div>
