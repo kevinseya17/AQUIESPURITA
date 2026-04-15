@@ -1,6 +1,7 @@
 """
-Django settings for login project.
+Django settings for login project (PRODUCCIÓN - RENDER)
 """
+
 import os
 import dj_database_url
 from pathlib import Path
@@ -11,9 +12,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ──────────────────────────────────────────
 # SEGURIDAD
 # ──────────────────────────────────────────
-SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = config(
+    'SECRET_KEY',
+    default='django-insecure-1234567890-super-clave-temporal'
+)
+
 DEBUG = config('DEBUG', default=False, cast=bool)
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost').split(',')
+
+ALLOWED_HOSTS = config(
+    'ALLOWED_HOSTS',
+    default='*'
+).split(',')
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.onrender.com",
+]
 
 # ──────────────────────────────────────────
 # APLICACIONES
@@ -51,10 +64,13 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'login.urls'
 
+# ──────────────────────────────────────────
+# TEMPLATES
+# ──────────────────────────────────────────
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -70,12 +86,16 @@ TEMPLATES = [
 WSGI_APPLICATION = 'login.wsgi.application'
 
 # ──────────────────────────────────────────
-# BASE DE DATOS — SQLite local / PostgreSQL en producción
+# BASE DE DATOS
 # ──────────────────────────────────────────
 DATABASES = {
     'default': dj_database_url.config(
-        default=config('DATABASE_URL', default=f'sqlite:///{BASE_DIR}/db.sqlite3'),
+        default=config(
+            'DATABASE_URL',
+            default=f"sqlite:///{BASE_DIR}/db.sqlite3"
+        ),
         conn_max_age=600,
+        ssl_require=not DEBUG
     )
 }
 
@@ -98,24 +118,29 @@ USE_I18N = True
 USE_TZ = True
 
 # ──────────────────────────────────────────
-# ARCHIVOS ESTÁTICOS — WhiteNoise
+# ARCHIVOS ESTÁTICOS
 # ──────────────────────────────────────────
 STATIC_URL = '/static/'
+
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'core/static'),
 ]
+
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # ──────────────────────────────────────────
-# ARCHIVOS DE MEDIOS — Cloudinary
+# CLOUDINARY (CON TUS CLAVES)
 # ──────────────────────────────────────────
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY': config('CLOUDINARY_API_KEY'),
-    'API_SECRET': config('CLOUDINARY_API_SECRET'),
+    'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME', default='dwjtcdo6x'),
+    'API_KEY': config('CLOUDINARY_API_KEY', default='228473154398677'),
+    'API_SECRET': config('CLOUDINARY_API_SECRET', default='iuPUbaKGLHaXLVGEFBz6HFImcAQ'),
 }
+
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
 MEDIA_URL = '/media/'
 
 # ──────────────────────────────────────────
