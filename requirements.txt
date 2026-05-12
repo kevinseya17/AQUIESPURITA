@@ -12,7 +12,7 @@ Django==5.1.7
 django-crispy-forms==2.3
 et_xmlfile==2.0.0
 freetype-py==2.5.1
-html5lib==1.1
+html5lib
 idna==3.11
 lxml==6.0.2
 openpyxl==3.1.5
@@ -39,7 +39,7 @@ tzlocal==5.3.1
 uritools==5.0.0
 urllib3==2.5.0
 webencodings==0.5.1
-xhtml2pdf==0.2.1
+xhtml2pdf
 cloudinary==1.41.0
 django-cloudinary-storage==0.3.0
 dj-database-url==2.1.0
