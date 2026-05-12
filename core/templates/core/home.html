@@ -1,24 +1,36 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block content %}
-
-<h3>Inicio</h3>
-
-{% if request.user.is_authenticated %}
-    <hr>
-    <h4>
-        {{ request.user.username | upper }}, Bienvenid@
-    </h4>
-
-    {% if request.user.is_superuser or request.user.is_staff %}
-        <p>Estás viendo el panel de administrador.</p>
-        <a href="{% url 'admin_dashboard' %}">Ir al Panel de Administración</a>
-    {% else %}
-        <p>Bienvenido a Lacteos Aquí Es Purita</p>
-    {% endif %}
-{% else %}
-    <p>Por favor inicia sesión para continuar.</p>
-{% endif %}
-
-
+<div class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        {% if request.user.is_authenticated %}
+            <h1 class="hero-title">¡Hola, {{ request.user.username|title }}!</h1>
+            <p class="hero-subtitle">Bienvenido de nuevo a Lácteos Aquí Es Purita. Todo el sabor del campo, directo a tu mesa.</p>
+            
+            {% if request.user.is_superuser or request.user.is_staff %}
+                <a href="{% url 'admin_dashboard' %}" class="btn btn-primary btn-lg mt-3 hero-btn">
+                    <i class="fas fa-cogs"></i> Panel de Administración
+                </a>
+            {% else %}
+                <a href="{% url 'products' %}" class="btn btn-primary btn-lg mt-3 hero-btn">
+                    <i class="fas fa-shopping-bag"></i> Ver Catálogo
+                </a>
+            {% endif %}
+            
+        {% else %}
+            <h1 class="hero-title">El Sabor Puro del Campo</h1>
+            <p class="hero-subtitle">Descubre nuestra selección de quesos, yogures y lácteos frescos de la más alta calidad.</p>
+            <div class="hero-actions mt-4">
+                <a href="{% url 'products' %}" class="btn btn-primary btn-lg hero-btn">
+                    <i class="fas fa-shopping-bag"></i> Ver Productos
+                </a>
+                <a href="{% url 'login' %}" class="btn btn-outline-light btn-lg hero-btn ms-2">
+                    <i class="fas fa-user"></i> Iniciar Sesión
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}

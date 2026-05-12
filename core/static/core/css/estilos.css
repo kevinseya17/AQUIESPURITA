@@ -377,3 +377,94 @@ body {
     padding-top: 60px; /* Espacio para la navbar */
     z-index: 1;
 }
+
+/* ============================
+   Hero Section (home.html)
+============================ */
+.hero-section {
+    position: relative;
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url('../img/fondo_de_inicio.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    margin-top: -75px; /* Compensa el padding del body */
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    background: var(--glass-bg);
+    padding: 3rem 4rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    max-width: 800px;
+    animation: fadeIn 1s ease-out;
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--primary-green);
+    margin-bottom: 1rem;
+    letter-spacing: -1px;
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    color: var(--text-dark);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.hero-btn {
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    transition: var(--transition);
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.hero-btn.btn-primary {
+    background-color: var(--primary-green);
+    border: none;
+    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+}
+
+.hero-btn.btn-primary:hover {
+    background-color: var(--hover-green);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(27, 94, 32, 0.4);
+}
+
+.hero-btn.btn-outline-light {
+    color: var(--primary-green);
+    border: 2px solid var(--primary-green);
+    background: transparent;
+}
+
+.hero-btn.btn-outline-light:hover {
+    background: var(--primary-green);
+    color: white;
+    transform: translateY(-3px);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
