@@ -1,127 +1,168 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row">
-        <!-- Sidebar -->
-        <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse shadow">
-            <div class="position-sticky pt-3">
-                <h5 class="px-3">Panel de Administración</h5>
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'admin_dashboard' %}">
-                            <i class="fas fa-tachometer-alt"></i> Panel administrativo
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'admin_usuarios' %}">
-                            <i class="fas fa-users"></i> Usuarios
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'admin_productos' %}">
-                            <i class="fas fa-boxes"></i> Productos
-                        </a>
-                    </li>
+<!-- Fondo fijo -->
+<div class="fixed-background" style="background-image: url('{% static 'core/img/vacas.png' %}');"></div>
 
-
-                   <li class="nav-item">
-                        <a class="nav-link" href="{% url 'reporte_diario' %}">
-                            <i class="fas fa-chart-line"></i> Reporte / Cuadre Diario
+<div class="container-fluid py-4" style="margin-top: 80px;">
+    <div class="row g-4">
+        <!-- Sidebar Premium -->
+        <nav class="col-md-3 col-lg-2">
+            <div class="admin-sidebar glass-card h-100 p-3 position-sticky" style="top: 100px;">
+                <h5 class="fw-bold mb-4 px-2" style="color: var(--primary-green, #2e7d32);">
+                    <i class="fas fa-shield-alt me-2"></i> Admin Panel
+                </h5>
+                <ul class="nav flex-column mb-auto gap-2">
+                    <li class="nav-item">
+                        <a class="nav-link admin-link" href="{% url 'admin_dashboard' %}">
+                            <i class="fas fa-tachometer-alt fa-fw me-2"></i> Inicio
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'log_auditoria' %}">
-                            <i class="fas fa-clipboard-list"></i> LOG de Auditoría
+                        <a class="nav-link active admin-link" href="{% url 'admin_usuarios' %}">
+                            <i class="fas fa-users fa-fw me-2"></i> Usuarios
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link admin-link" href="{% url 'admin_productos' %}">
+                            <i class="fas fa-boxes fa-fw me-2"></i> Productos
+                        </a>
+                    </li>
+                    {% if user.is_staff or user.is_superuser %}
+                    <li class="nav-item">
+                        <a class="nav-link admin-link" href="{% url 'reporte_diario' %}">
+                            <i class="fas fa-chart-line fa-fw me-2"></i> Reportes
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link admin-link" href="{% url 'log_auditoria' %}">
+                            <i class="fas fa-clipboard-list fa-fw me-2"></i> Auditoría
+                        </a>
+                    </li>
+                    {% endif %}
                 </ul>
-                <hr>
+                <hr class="border-secondary my-4" style="opacity: 0.1;">
                 <form method="post" action="{% url 'logout' %}">
                     {% csrf_token %}
-                    <button class="btn btn-outline-danger w-100">
-                        <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+                    <button class="btn btn-outline-danger w-100 rounded-pill fw-bold">
+                        <i class="fas fa-sign-out-alt me-2"></i> Salir
                     </button>
                 </form>
             </div>
         </nav>
 
         <!-- Main content -->
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-4">
-            <div class="d-flex justify-content-between align-items-center pb-2 mb-3 border-bottom">
-                <h1 class="h2">Gestión de Usuarios</h1>
-            </div>
-
-            <!-- Formulario para agregar nuevo usuario -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">Agregar nuevo usuario</h5>
-                    <form method="post" action="{% url 'agregar_usuario' %}">
-                        {% csrf_token %}
-                        <div class="row">
-                            <div class="col-md-3 mb-2">
-                                <input type="text" name="username" placeholder="Nombre de usuario" class="form-control" required>
-                            </div>
-                            <div class="col-md-2 mb-2">
-                                <input type="text" name="first_name" placeholder="Nombre" class="form-control">
-                            </div>
-                            <div class="col-md-2 mb-2">
-                                <input type="text" name="last_name" placeholder="Apellido" class="form-control">
-                            </div>
-                            <div class="col-md-3 mb-2">
-                                <input type="email" name="email" placeholder="Correo" class="form-control">
-                            </div>
-                            <div class="col-md-2 mb-2">
-                                <button type="submit" class="btn btn-primary w-100">Agregar</button>
-                            </div>
-                        </div>
-                    </form>
+        <main class="col-md-9 col-lg-10">
+            <div class="admin-main-panel glass-card p-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-4 pb-3" style="border-bottom: 1px solid rgba(0,0,0,0.05);">
+                    <h2 class="fw-bold m-0 text-dark"><i class="fas fa-users me-2"></i> Gestión de Usuarios</h2>
                 </div>
-            </div>
 
-            <!-- Tabla de usuarios -->
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover shadow-sm">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Usuario</th>
-                            <th>Nombre</th>
-                            <th>Apellido</th>
-                            <th>Correo</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for usuario in usuarios %}
-                        <tr>
-                            <form method="post" action="{% url 'actualizar_usuario' usuario.id %}">
-                                {% csrf_token %}
-                                <td>{{ usuario.username }}</td>
-                                <td><input type="text" name="first_name" value="{{ usuario.first_name }}" class="form-control form-control-sm"></td>
-                                <td><input type="text" name="last_name" value="{{ usuario.last_name }}" class="form-control form-control-sm"></td>
-                                <td><input type="email" name="email" value="{{ usuario.email }}" class="form-control form-control-sm"></td>
-                                <td>
-                                    <div class="d-flex">
-                                        <button type="submit" class="btn btn-success btn-sm me-2">
-                                            <i class="fas fa-save"></i>
-                                        </button>
-                                        {% if usuario != request.user and not usuario.is_superuser %}
-                                        <a href="{% url 'eliminar_usuario' usuario.id %}" class="btn btn-danger btn-sm"
-                                           onclick="return confirm('¿Eliminar este usuario?');">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-                                        {% endif %}
-                                    </div>
-                                </td>
-                            </form>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                <!-- Formulario Agregar Usuario -->
+                <div class="card glass-card-inner border-0 mb-4">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-4 text-dark"><i class="fas fa-user-plus me-2"></i> Agregar Nuevo Usuario</h5>
+                        <form method="post" action="{% url 'agregar_usuario' %}" class="row g-3 align-items-center">
+                            {% csrf_token %}
+                            <div class="col-md-3">
+                                <input type="text" name="username" class="form-control glass-input" placeholder="Usuario" required>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" name="first_name" class="form-control glass-input" placeholder="Nombre">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" name="last_name" class="form-control glass-input" placeholder="Apellido">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="email" name="email" class="form-control glass-input" placeholder="Correo">
+                            </div>
+                            <div class="col-12 mt-3 text-end">
+                                <button type="submit" class="btn btn-primary rounded-pill px-4">
+                                    <i class="fas fa-plus-circle me-1"></i> Agregar Usuario
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Tabla de Usuarios -->
+                <div class="card glass-card-inner border-0">
+                    <div class="card-body p-4">
+                        <div class="table-responsive">
+                            <table class="table admin-table align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Usuario</th>
+                                        <th>Nombre</th>
+                                        <th>Apellido</th>
+                                        <th>Correo</th>
+                                        <th class="text-end">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for usuario in usuarios %}
+                                    <tr>
+                                        <form method="post" action="{% url 'actualizar_usuario' usuario.id %}">
+                                            {% csrf_token %}
+                                            <td class="fw-bold">{{ usuario.username }}</td>
+                                            <td><input type="text" name="first_name" value="{{ usuario.first_name }}" class="form-control glass-input form-control-sm"></td>
+                                            <td><input type="text" name="last_name" value="{{ usuario.last_name }}" class="form-control glass-input form-control-sm"></td>
+                                            <td><input type="email" name="email" value="{{ usuario.email }}" class="form-control glass-input form-control-sm"></td>
+                                            <td class="text-end">
+                                                <div class="btn-group shadow-sm">
+                                                    <button type="submit" class="btn btn-success btn-sm" title="Guardar">
+                                                        <i class="fas fa-save"></i>
+                                                    </button>
+                                                    {% if usuario != request.user and not usuario.is_superuser %}
+                                                    <a href="{% url 'eliminar_usuario' usuario.id %}" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar de forma permanente este usuario?');" title="Eliminar">
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                        </form>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
 </div>
+
+<style>
+/* Estilos compartidos con admin_dashboard.html */
+.fixed-background { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-size: cover; background-position: center; z-index: -1; opacity: 0.5; }
+.glass-card { background: var(--glass-bg, rgba(255, 255, 255, 0.85)); border-radius: var(--radius-lg, 20px); box-shadow: var(--shadow-lg, 0 15px 35px rgba(0,0,0,0.1)); backdrop-filter: blur(20px); border: 1px solid var(--glass-border, rgba(255,255,255,0.4)); }
+.glass-card-inner { background: rgba(255,255,255,0.6) !important; border-radius: 15px; backdrop-filter: blur(10px); }
+.admin-link { color: #4a5568; border-radius: 10px; padding: 12px 15px; font-weight: 500; transition: all 0.3s ease; }
+.admin-link:hover { background: rgba(46, 125, 50, 0.1); color: var(--primary-green, #2e7d32); transform: translateX(5px); }
+.admin-link.active { background: var(--primary-green, #2e7d32); color: white; box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3); }
+
+/* Inputs y Tablas */
+.glass-input {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 8px;
+    padding: 8px 12px;
+    transition: all 0.3s ease;
+}
+.glass-input:focus {
+    background: white;
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.25);
+}
+
+.admin-table { --bs-table-bg: transparent; }
+.admin-table thead th { border-bottom: 2px solid rgba(0,0,0,0.05); color: #6c757d; font-weight: 600; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px; padding-bottom: 15px; }
+.admin-table tbody td { border-bottom: 1px solid rgba(0,0,0,0.03); padding: 15px 10px; color: #4a5568; }
+.admin-table tbody tr { transition: background-color 0.2s ease; }
+.admin-table tbody tr:hover { background-color: rgba(255,255,255,0.5); }
+</style>
 {% endblock %}
 
 

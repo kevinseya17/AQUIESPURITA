@@ -1,173 +1,236 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row">
-        <!-- Sidebar -->
-        <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse shadow">
-            <div class="position-sticky pt-3">
-                <h5 class="px-3">Panel de Administración</h5>
-                <ul class="nav flex-column">
+<!-- Fondo fijo -->
+<div class="fixed-background" style="background-image: url('{% static 'core/img/vacas.png' %}');"></div>
+
+<div class="container-fluid py-4" style="margin-top: 80px;">
+    <div class="row g-4">
+        <!-- Sidebar Premium -->
+        <nav class="col-md-3 col-lg-2">
+            <div class="admin-sidebar glass-card h-100 p-3 position-sticky" style="top: 100px;">
+                <h5 class="fw-bold mb-4 px-2" style="color: var(--primary-green, #2e7d32);">
+                    <i class="fas fa-shield-alt me-2"></i> Admin Panel
+                </h5>
+                <ul class="nav flex-column mb-auto gap-2">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'admin_dashboard' %}">
-                            <i class="fas fa-tachometer-alt"></i> Panel administrativo
+                        <a class="nav-link admin-link" href="{% url 'admin_dashboard' %}">
+                            <i class="fas fa-tachometer-alt fa-fw me-2"></i> Inicio
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'admin_usuarios' %}">
-                            <i class="fas fa-users"></i> Usuarios
+                        <a class="nav-link admin-link" href="{% url 'admin_usuarios' %}">
+                            <i class="fas fa-users fa-fw me-2"></i> Usuarios
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'admin_productos' %}">
-                            <i class="fas fa-boxes"></i> Productos
+                        <a class="nav-link active admin-link" href="{% url 'admin_productos' %}">
+                            <i class="fas fa-boxes fa-fw me-2"></i> Productos
+                        </a>
+                    </li>
+                    {% if user.is_staff or user.is_superuser %}
+                    <li class="nav-item">
+                        <a class="nav-link admin-link" href="{% url 'reporte_diario' %}">
+                            <i class="fas fa-chart-line fa-fw me-2"></i> Reportes
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'reporte_diario' %}">
-                            <i class="fas fa-chart-line"></i> Reporte / Cuadre Diario
+                        <a class="nav-link admin-link" href="{% url 'log_auditoria' %}">
+                            <i class="fas fa-clipboard-list fa-fw me-2"></i> Auditoría
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'log_auditoria' %}">
-                            <i class="fas fa-clipboard-list"></i> LOG de Auditoría
-                        </a>
-                    </li>
+                    {% endif %}
                 </ul>
-                <hr>
+                <hr class="border-secondary my-4" style="opacity: 0.1;">
                 <form method="post" action="{% url 'logout' %}">
                     {% csrf_token %}
-                    <button class="btn btn-outline-danger w-100">
-                        <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+                    <button class="btn btn-outline-danger w-100 rounded-pill fw-bold">
+                        <i class="fas fa-sign-out-alt me-2"></i> Salir
                     </button>
                 </form>
             </div>
         </nav>
 
         <!-- Main content -->
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-4">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-                <h1 class="h2">Gestión de Productos</h1>
-            </div>
+        <main class="col-md-9 col-lg-10">
+            <div class="admin-main-panel glass-card p-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-4 pb-3" style="border-bottom: 1px solid rgba(0,0,0,0.05);">
+                    <h2 class="fw-bold m-0 text-dark"><i class="fas fa-box-open me-2"></i> Gestión de Productos</h2>
+                </div>
 
-            <!-- Formulario de nuevo producto -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">Agregar nuevo producto</h5>
-                    <form method="post" action="{% url 'agregar_producto' %}" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="row g-2">
-                            <div class="col-md-2">
-                                <input type="text" name="nombre" class="form-control" placeholder="Nombre" required>
+                <!-- Formulario Agregar Producto -->
+                <div class="card glass-card-inner border-0 mb-4">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-4 text-dark"><i class="fas fa-plus-circle me-2"></i> Agregar Nuevo Producto</h5>
+                        <form method="post" action="{% url 'agregar_producto' %}" enctype="multipart/form-data" class="row g-3">
+                            {% csrf_token %}
+                            <div class="col-md-3">
+                                <label class="form-label text-muted small fw-bold">Nombre</label>
+                                <input type="text" name="nombre" class="form-control glass-input" placeholder="Ej. Queso Fresco" required>
                             </div>
                             <div class="col-md-2">
-                                <input type="text" name="codigo" class="form-control" placeholder="Código" required>
+                                <label class="form-label text-muted small fw-bold">Código</label>
+                                <input type="text" name="codigo" class="form-control glass-input" placeholder="Ej. QF-001" required>
                             </div>
                             <div class="col-md-2">
-                                <input type="number" step="0.01" name="precio" class="form-control" placeholder="Precio" required>
+                                <label class="form-label text-muted small fw-bold">Precio ($)</label>
+                                <input type="number" step="0.01" name="precio" class="form-control glass-input" placeholder="0.00" required>
                             </div>
                             <div class="col-md-2">
-                                <input type="text" name="descripcion" class="form-control" placeholder="Descripción" required>
-                            </div>
-                            <div class="col-md-2">
-                                <select name="categoria" class="form-control" required>
-                                    <option value="" disabled selected>Selecciona categoría</option>
+                                <label class="form-label text-muted small fw-bold">Categoría</label>
+                                <select name="categoria" class="form-select glass-input" required>
+                                    <option value="" disabled selected>Selecciona</option>
                                     {% for cat in categorias %}
                                         <option value="{{ cat.id }}">{{ cat.nombre }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
                             <div class="col-md-2">
-                                <input type="number" name="cantidad" class="form-control" placeholder="Cantidad" min="0" required>
+                                <label class="form-label text-muted small fw-bold">Stock</label>
+                                <input type="number" name="cantidad" class="form-control glass-input" placeholder="0" min="0" required>
                             </div>
-                            <div class="col-md-4">
-                                <input type="file" name="imagen" class="form-control">
-                            </div>
-                            <div class="col-md-2 d-flex align-items-center">
-                                <div class="form-check ms-2">
-                                    <input class="form-check-input" type="checkbox" name="disponible" id="disponible" checked>
-                                    <label class="form-check-label" for="disponible">Disponible</label>
+                            <div class="col-md-1 d-flex flex-column align-items-center justify-content-center">
+                                <label class="form-label text-muted small fw-bold">Activo</label>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" name="disponible" id="disponible" checked style="transform: scale(1.3);">
                                 </div>
                             </div>
-                            <div class="col-md-2">
-                                <button type="submit" class="btn btn-primary w-100">Agregar</button>
+                            <div class="col-md-5">
+                                <label class="form-label text-muted small fw-bold">Descripción</label>
+                                <input type="text" name="descripcion" class="form-control glass-input" placeholder="Breve descripción del producto" required>
                             </div>
-                        </div>
-                    </form>
+                            <div class="col-md-4">
+                                <label class="form-label text-muted small fw-bold">Imagen del Producto</label>
+                                <input type="file" name="imagen" class="form-control glass-input">
+                            </div>
+                            <div class="col-md-3 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary w-100 rounded-pill">
+                                    <i class="fas fa-save me-1"></i> Guardar Producto
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Tabla de Productos -->
+                <div class="card glass-card-inner border-0">
+                    <div class="card-body p-4">
+                        <form method="post" action="{% url 'admin_productos' %}" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="table-responsive">
+                                <table class="table admin-table align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 60px;">Img</th>
+                                            <th>Nombre</th>
+                                            <th style="width: 100px;">Código</th>
+                                            <th>Precio</th>
+                                            <th>Categoría</th>
+                                            <th style="width: 80px;">Stock</th>
+                                            <th class="text-center">Disp.</th>
+                                            <th class="text-end" style="width: 120px;">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for producto in productos %}
+                                        <tr>
+                                            <td>
+                                                <div class="position-relative d-inline-block product-img-upload">
+                                                    {% if producto.imagen %}
+                                                    <img src="{{ producto.imagen.url }}" alt="Img" class="rounded shadow-sm" style="width: 45px; height: 45px; object-fit: cover;">
+                                                    {% else %}
+                                                    <div class="rounded bg-light d-flex align-items-center justify-content-center text-muted" style="width: 45px; height: 45px;">
+                                                        <i class="fas fa-image"></i>
+                                                    </div>
+                                                    {% endif %}
+                                                    <!-- Input de archivo oculto sobre la imagen para cambiar rápido -->
+                                                    <input type="file" name="imagen_{{ producto.id }}" class="position-absolute top-0 start-0 w-100 h-100" style="opacity: 0; cursor: pointer;" title="Cambiar imagen">
+                                                </div>
+                                            </td>
+                                            <td><input type="text" name="nombre_{{ producto.id }}" value="{{ producto.nombre }}" class="form-control glass-input form-control-sm border-0 bg-transparent"></td>
+                                            <td><input type="text" name="codigo_{{ producto.id }}" value="{{ producto.codigo }}" class="form-control glass-input form-control-sm border-0 bg-transparent"></td>
+                                            <td>
+                                                <div class="input-group input-group-sm">
+                                                    <span class="input-group-text border-0 bg-transparent text-success">$</span>
+                                                    <input type="number" name="precio_{{ producto.id }}" step="0.01" value="{{ producto.precio }}" class="form-control glass-input border-0 bg-transparent">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <select name="categoria_{{ producto.id }}" class="form-select glass-input form-select-sm border-0 bg-transparent">
+                                                    {% for categoria in categorias %}
+                                                    <option value="{{ categoria.id }}" {% if categoria.id == producto.categoria.id %}selected{% endif %}>
+                                                        {{ categoria.nombre }}
+                                                    </option>
+                                                    {% endfor %}
+                                                </select>
+                                                <!-- Campo oculto para la descripción para no ocupar tanto espacio en tabla -->
+                                                <input type="hidden" name="descripcion_{{ producto.id }}" value="{{ producto.descripcion }}">
+                                            </td>
+                                            <td><input type="number" name="cantidad_{{ producto.id }}" value="{{ producto.cantidad }}" class="form-control glass-input form-control-sm border-0 bg-transparent text-center"></td>
+                                            <td class="text-center">
+                                                <div class="form-check form-switch d-flex justify-content-center">
+                                                    <input class="form-check-input" type="checkbox" name="disponible_{{ producto.id }}" {% if producto.disponible %}checked{% endif %}>
+                                                </div>
+                                            </td>
+                                            <td class="text-end">
+                                                <div class="btn-group shadow-sm">
+                                                    <button type="submit" name="guardar" value="{{ producto.id }}" class="btn btn-success btn-sm" title="Guardar Cambios">
+                                                        <i class="fas fa-save"></i>
+                                                    </button>
+                                                    <button type="submit" name="eliminar" value="{{ producto.id }}" class="btn btn-danger btn-sm" title="Eliminar Producto" onclick="return confirm('¿Eliminar producto de forma permanente?');">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-
-            <!-- Tabla de productos -->
-            <form method="post" action="{% url 'admin_productos' %}" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover shadow-sm">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Imagen</th>
-                                <th>Nombre</th>
-                                <th>Código</th>
-                                <th>Descripción</th>
-                                <th>Precio</th>
-                                <th>Categoría</th>
-                                <th>Cantidad</th>
-                                <th>Disponible</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for producto in productos %}
-                            <tr>
-                                <td>
-                                    {% if producto.imagen %}
-                                    <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" style="width: 35px; height: 35px; object-fit: cover;">
-                                    {% else %}
-                                    <span>Sin imagen</span>
-                                    {% endif %}
-                                    <input type="file" name="imagen_{{ producto.id }}">
-                                </td>
-                                <td><input type="text" name="nombre_{{ producto.id }}" value="{{ producto.nombre }}" class="form-control"></td>
-                                <td><input type="text" name="codigo_{{ producto.id }}" value="{{ producto.codigo }}" class="form-control"></td>
-                                <td><input type="text" name="descripcion_{{ producto.id }}" value="{{ producto.descripcion }}" class="form-control"></td>
-                                <td><input type="number" name="precio_{{ producto.id }}" step="0.01" value="{{ producto.precio }}" class="form-control"></td>
-                                <td>
-                                    <select name="categoria_{{ producto.id }}" class="form-control">
-                                        {% for categoria in categorias %}
-                                        <option value="{{ categoria.id }}" {% if categoria.id == producto.categoria.id %}selected{% endif %}>
-                                            {{ categoria.nombre }}
-                                        </option>
-                                        {% endfor %}
-                                    </select>
-                                </td>
-                                <td><input type="number" name="cantidad_{{ producto.id }}" value="{{ producto.cantidad }}" class="form-control"></td>
-                                <td><input type="checkbox" name="disponible_{{ producto.id }}" {% if producto.disponible %}checked{% endif %}></td>
-                                <td>
-                                    <button type="submit" name="guardar" value="{{ producto.id }}" class="btn btn-success btn-sm">Guardar</button>
-                                    <button type="submit" name="eliminar" value="{{ producto.id }}" class="btn btn-danger btn-sm">Eliminar</button>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </form>
         </main>
     </div>
 </div>
-{% endblock %}
 
 <style>
-table img {
-    width: 35px;
-    height: 35px;
-    object-fit: cover;
-    border-radius: 5px;
+/* Estilos compartidos con admin_dashboard.html */
+.fixed-background { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-size: cover; background-position: center; z-index: -1; opacity: 0.5; }
+.glass-card { background: var(--glass-bg, rgba(255, 255, 255, 0.85)); border-radius: var(--radius-lg, 20px); box-shadow: var(--shadow-lg, 0 15px 35px rgba(0,0,0,0.1)); backdrop-filter: blur(20px); border: 1px solid var(--glass-border, rgba(255,255,255,0.4)); }
+.glass-card-inner { background: rgba(255,255,255,0.6) !important; border-radius: 15px; backdrop-filter: blur(10px); }
+.admin-link { color: #4a5568; border-radius: 10px; padding: 12px 15px; font-weight: 500; transition: all 0.3s ease; }
+.admin-link:hover { background: rgba(46, 125, 50, 0.1); color: var(--primary-green, #2e7d32); transform: translateX(5px); }
+.admin-link.active { background: var(--primary-green, #2e7d32); color: white; box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3); }
+
+/* Inputs y Tablas */
+.glass-input {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 8px;
+    padding: 8px 12px;
+    transition: all 0.3s ease;
+}
+.glass-input:focus {
+    background: white;
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.25);
+}
+.glass-input.bg-transparent:focus {
+    background: rgba(255,255,255,0.9) !important;
 }
 
-table td input,
-table td select {
-    width: 100%;
-    padding: 5px;
-    font-size: 0.9rem;
+.admin-table { --bs-table-bg: transparent; }
+.admin-table thead th { border-bottom: 2px solid rgba(0,0,0,0.05); color: #6c757d; font-weight: 600; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px; padding-bottom: 15px; }
+.admin-table tbody td { border-bottom: 1px solid rgba(0,0,0,0.03); padding: 10px; color: #4a5568; }
+.admin-table tbody tr { transition: background-color 0.2s ease; }
+.admin-table tbody tr:hover { background-color: rgba(255,255,255,0.7); }
+
+.product-img-upload:hover img, .product-img-upload:hover .bg-light {
+    opacity: 0.7;
+    filter: brightness(0.8);
 }
 </style>
+{% endblock %}

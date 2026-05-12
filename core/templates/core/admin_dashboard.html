@@ -1,168 +1,313 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row">
-        <!-- Sidebar -->
-        <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse shadow">
-            <div class="position-sticky pt-3">
-                <h5 class="px-3">Panel de Administración</h5>
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'admin_dashboard' %}">
-                            <i class="fas fa-tachometer-alt"></i> Panel administrativo
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'admin_usuarios' %}">
-                            <i class="fas fa-users"></i> Usuarios
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'admin_productos' %}">
-                            <i class="fas fa-boxes"></i> Productos
-                        </a>
-                    </li>
+<!-- Fondo fijo -->
+<div class="fixed-background" style="background-image: url('{% static 'core/img/vacas.png' %}');"></div>
 
-                    <!-- 📊 Nuevo enlace al reporte diario -->
+<div class="container-fluid py-4" style="margin-top: 80px;">
+    <div class="row g-4">
+        <!-- Sidebar Premium -->
+        <nav class="col-md-3 col-lg-2">
+            <div class="admin-sidebar glass-card h-100 p-3 position-sticky" style="top: 100px;">
+                <h5 class="fw-bold mb-4 px-2" style="color: var(--primary-green, #2e7d32);">
+                    <i class="fas fa-shield-alt me-2"></i> Admin Panel
+                </h5>
+                <ul class="nav flex-column mb-auto gap-2">
+                    <li class="nav-item">
+                        <a class="nav-link active admin-link" href="{% url 'admin_dashboard' %}">
+                            <i class="fas fa-tachometer-alt fa-fw me-2"></i> Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link admin-link" href="{% url 'admin_usuarios' %}">
+                            <i class="fas fa-users fa-fw me-2"></i> Usuarios
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link admin-link" href="{% url 'admin_productos' %}">
+                            <i class="fas fa-boxes fa-fw me-2"></i> Productos
+                        </a>
+                    </li>
                     {% if user.is_staff or user.is_superuser %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'reporte_diario' %}">
-                            <i class="fas fa-chart-line"></i> Reporte / Cuadre Diario
+                        <a class="nav-link admin-link" href="{% url 'reporte_diario' %}">
+                            <i class="fas fa-chart-line fa-fw me-2"></i> Reportes
                         </a>
                     </li>
-
-                       <!-- 🧾 LOG de Auditoría (nuevo) -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'log_auditoria' %}">
-                            <i class="fas fa-clipboard-list"></i> LOG de Auditoría
+                        <a class="nav-link admin-link" href="{% url 'log_auditoria' %}">
+                            <i class="fas fa-clipboard-list fa-fw me-2"></i> Auditoría
                         </a>
                     </li>
-
                     {% endif %}
                 </ul>
-
-                <hr>
-
+                <hr class="border-secondary my-4" style="opacity: 0.1;">
                 <form method="post" action="{% url 'logout' %}">
                     {% csrf_token %}
-                    <button class="btn btn-outline-danger w-100">
-                        <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+                    <button class="btn btn-outline-danger w-100 rounded-pill fw-bold">
+                        <i class="fas fa-sign-out-alt me-2"></i> Salir
                     </button>
                 </form>
             </div>
         </nav>
 
         <!-- Main content -->
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-4">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-                <h1 class="h2">Bienvenido, {{ request.user.username }}</h1>
-            </div>
+        <main class="col-md-9 col-lg-10">
+            <div class="admin-main-panel glass-card p-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-4 pb-3" style="border-bottom: 1px solid rgba(0,0,0,0.05);">
+                    <h2 class="fw-bold m-0 text-dark">Panel de Control</h2>
+                    <span class="badge bg-success px-3 py-2 rounded-pill shadow-sm"><i class="fas fa-circle me-2" style="font-size: 0.6rem;"></i>Sistema Activo</span>
+                </div>
 
-            <div class="alert alert-info shadow-sm" role="alert">
-                Aquí puedes gestionar usuarios, productos y próximamente más funciones administrativas.
-            </div>
+                <div class="alert alert-success glass-alert shadow-sm mb-4 border-0" role="alert">
+                    <i class="fas fa-hand-sparkles me-2"></i> Bienvenido, <strong>{{ request.user.username }}</strong>. Aquí tienes un resumen del estado del sistema.
+                </div>
 
-            <!-- Estadísticas -->
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title">Total de usuarios</h5>
-                            <p class="card-text display-6">{{ total_usuarios }}</p>
+                <!-- Estadísticas Premium -->
+                <div class="row g-4 mb-5">
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon text-primary" style="background: rgba(13, 110, 253, 0.1);">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-details">
+                                <h6 class="stat-title">Usuarios Totales</h6>
+                                <h3 class="stat-value text-primary">{{ total_usuarios }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon text-success" style="background: rgba(25, 135, 84, 0.1);">
+                                <i class="fas fa-box-open"></i>
+                            </div>
+                            <div class="stat-details">
+                                <h6 class="stat-title">Productos Activos</h6>
+                                <h3 class="stat-value text-success">{{ total_productos }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon text-warning" style="background: rgba(255, 193, 7, 0.1);">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <div class="stat-details">
+                                <h6 class="stat-title">Valor Inventario</h6>
+                                <h3 class="stat-value text-warning">${{ valor_total_inventario|floatformat:2 }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon text-info" style="background: rgba(13, 202, 240, 0.1);">
+                                <i class="fas fa-tags"></i>
+                            </div>
+                            <div class="stat-details">
+                                <h6 class="stat-title">Categorías</h6>
+                                <h3 class="stat-value text-info">{{ total_categorias }}</h3>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title">Productos activos</h5>
-                            <p class="card-text display-6">{{ total_productos }}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title">Valor total del inventario:</h5>
-                            <p class="card-text display-6">${{ valor_total_inventario|floatformat:2 }}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title">Categorías</h5>
-                            <p class="card-text display-6">{{ total_categorias }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Tabla de últimos usuarios -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">Últimos usuarios registrados</h5>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-hover">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Usuario</th>
-                                    <th>Nombre</th>
-                                    <th>Apellido</th>
-                                    <th>Correo</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for usuario in ultimos_usuarios %}
-                                <tr>
-                                    <td>{{ usuario.username }}</td>
-                                    <td>{{ usuario.first_name }}</td>
-                                    <td>{{ usuario.last_name }}</td>
-                                    <td>{{ usuario.email }}</td>
-                                </tr>
-                                {% empty %}
-                                <tr><td colspan="4">No hay usuarios recientes.</td></tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                <div class="row g-4">
+                    <!-- Tabla Últimos Usuarios -->
+                    <div class="col-lg-6">
+                        <div class="card glass-card-inner border-0 h-100">
+                            <div class="card-body p-4">
+                                <h5 class="fw-bold mb-4 text-dark"><i class="fas fa-user-clock me-2"></i> Usuarios Recientes</h5>
+                                <div class="table-responsive">
+                                    <table class="table admin-table align-middle">
+                                        <thead>
+                                            <tr>
+                                                <th>Usuario</th>
+                                                <th>Nombre Completo</th>
+                                                <th>Correo</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for usuario in ultimos_usuarios %}
+                                            <tr>
+                                                <td class="fw-bold">{{ usuario.username }}</td>
+                                                <td>{{ usuario.first_name }} {{ usuario.last_name }}</td>
+                                                <td><span class="text-muted">{{ usuario.email }}</span></td>
+                                            </tr>
+                                            {% empty %}
+                                            <tr><td colspan="3" class="text-center py-3 text-muted">No hay usuarios recientes.</td></tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- Tabla de últimos productos -->
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Últimos productos agregados</h5>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-hover">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>Precio</th>
-                                    <th>Descripción</th>
-                                    <th>Categoría</th>
-                                    <th>Cantidad</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for producto in ultimos_productos %}
-                                <tr>
-                                    <td>{{ producto.nombre }}</td>
-                                    <td>${{ producto.precio|floatformat:2 }}</td>
-                                    <td>{{ producto.descripcion }}</td>
-                                    <td>{{ producto.categoria.nombre }}</td>
-                                    <td>{{ producto.cantidad }}</td>
-                                </tr>
-                                {% empty %}
-                                <tr><td colspan="5">No hay productos recientes.</td></tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                    <!-- Tabla Últimos Productos -->
+                    <div class="col-lg-6">
+                        <div class="card glass-card-inner border-0 h-100">
+                            <div class="card-body p-4">
+                                <h5 class="fw-bold mb-4 text-dark"><i class="fas fa-box-open me-2"></i> Últimos Productos</h5>
+                                <div class="table-responsive">
+                                    <table class="table admin-table align-middle">
+                                        <thead>
+                                            <tr>
+                                                <th>Nombre</th>
+                                                <th>Precio</th>
+                                                <th>Categoría</th>
+                                                <th>Stock</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for producto in ultimos_productos %}
+                                            <tr>
+                                                <td class="fw-bold">{{ producto.nombre }}</td>
+                                                <td class="text-success fw-bold">${{ producto.precio|floatformat:2 }}</td>
+                                                <td><span class="badge bg-light text-dark">{{ producto.categoria.nombre }}</span></td>
+                                                <td>
+                                                    {% if producto.cantidad > 0 %}
+                                                        <span class="badge bg-success rounded-pill">{{ producto.cantidad }}</span>
+                                                    {% else %}
+                                                        <span class="badge bg-danger rounded-pill">Agotado</span>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            {% empty %}
+                                            <tr><td colspan="4" class="text-center py-3 text-muted">No hay productos recientes.</td></tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </main>
     </div>
 </div>
+
+<style>
+/* ============================
+   Diseño de Panel de Administración
+============================ */
+.fixed-background {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+    opacity: 0.5;
+}
+
+.glass-card {
+    background: var(--glass-bg, rgba(255, 255, 255, 0.85));
+    border-radius: var(--radius-lg, 20px);
+    box-shadow: var(--shadow-lg, 0 15px 35px rgba(0,0,0,0.1));
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border, rgba(255,255,255,0.4));
+}
+
+.glass-card-inner {
+    background: rgba(255,255,255,0.6) !important;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+}
+
+.glass-alert {
+    background: rgba(209, 231, 221, 0.7);
+    backdrop-filter: blur(10px);
+    color: #0f5132;
+    border-radius: 12px;
+}
+
+.admin-link {
+    color: #4a5568;
+    border-radius: 10px;
+    padding: 12px 15px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.admin-link:hover {
+    background: rgba(46, 125, 50, 0.1);
+    color: var(--primary-green, #2e7d32);
+    transform: translateX(5px);
+}
+
+.admin-link.active {
+    background: var(--primary-green, #2e7d32);
+    color: white;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3);
+}
+
+.stat-card {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.03);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.stat-title {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-value {
+    margin: 0;
+    font-weight: 800;
+}
+
+.admin-table {
+    --bs-table-bg: transparent;
+}
+
+.admin-table thead th {
+    border-bottom: 2px solid rgba(0,0,0,0.05);
+    color: #6c757d;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    padding-bottom: 15px;
+}
+
+.admin-table tbody td {
+    border-bottom: 1px solid rgba(0,0,0,0.03);
+    padding: 15px 10px;
+    color: #4a5568;
+}
+
+.admin-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.admin-table tbody tr:hover {
+    background-color: rgba(255,255,255,0.5);
+}
+</style>
 {% endblock %}
