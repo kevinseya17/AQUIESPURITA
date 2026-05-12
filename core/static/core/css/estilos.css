@@ -1,9 +1,28 @@
 /* ============================
-   reset básico
+   Variables y Reset
 ============================ */
+:root {
+    --primary-green: #2e7d32;
+    --hover-green: #1b5e20;
+    --light-green: #e8f5e9;
+    --text-dark: #2c3e50;
+    --text-light: #6c757d;
+    --bg-light: #f8f9fa;
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 8px 16px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 15px 35px rgba(0, 0, 0, 0.15);
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Outfit', sans-serif;
+    color: var(--text-dark);
+    background-color: var(--bg-light);
 }
 
 /* ============================
@@ -28,8 +47,39 @@ body {
 }
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    padding-top: 60px; /* espacio para navbar fija */
+    font-family: 'Outfit', sans-serif;
+    padding-top: 75px; /* espacio para navbar fija */
+    background-color: var(--bg-light);
+}
+
+/* ============================
+   Glass Navbar
+============================ */
+.glass-nav {
+    background: rgba(255, 255, 255, 0.7) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+
+.glass-nav .navbar-brand {
+    font-weight: 700;
+    color: var(--primary-green) !important;
+    letter-spacing: -0.5px;
+}
+
+.glass-nav .nav-link {
+    font-weight: 500;
+    color: var(--text-dark) !important;
+    transition: var(--transition);
+    position: relative;
+}
+
+.glass-nav .nav-link:hover {
+    color: var(--primary-green) !important;
+    transform: translateY(-1px);
 }
 
 
@@ -44,45 +94,64 @@ body {
 
 .user-dropbtn {
     background-color: transparent;
-    color: #4CAF50;
+    color: var(--primary-green);
     padding: 8px 15px;
     font-size: 16px;
+    font-weight: 500;
     border: none;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 5px;
+    transition: var(--transition);
+    border-radius: var(--radius-md);
 }
 
 .user-dropbtn:hover {
-    color: #3e8e41;
+    color: var(--hover-green);
+    background-color: var(--light-green);
+    transform: translateY(-1px);
 }
 
 .user-dropdown-content {
-    display: none;
+    display: block;
+    visibility: hidden;
+    opacity: 0;
     position: absolute;
     right: 0;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    top: 120%;
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    min-width: 180px;
+    box-shadow: var(--shadow-md);
     z-index: 1000;
-    border-radius: 5px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--glass-border);
+    transition: var(--transition);
+    transform: translateY(10px);
+    overflow: hidden;
 }
 
-.user-dropdown-content a {
-    color: black;
+.user-dropdown-content a, .user-dropdown-content form button {
+    color: var(--text-dark);
     padding: 12px 16px;
     text-decoration: none;
     display: block;
+    font-weight: 500;
+    transition: var(--transition);
+    border-bottom: 1px solid rgba(0,0,0,0.03);
 }
 
-.user-dropdown-content a:hover {
-    background-color: #f1f1f1;
-    border-radius: 5px;
+.user-dropdown-content a:hover, .user-dropdown-content form button:hover {
+    background-color: var(--light-green);
+    color: var(--primary-green);
+    padding-left: 20px;
 }
 
 .user-dropdown:hover .user-dropdown-content {
-    display: block;
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
 }
 
 /* ============================
@@ -95,44 +164,62 @@ body {
 
 .product-dropdown .user-dropbtn {
     background-color: transparent;
-    color: #4CAF50;
+    color: var(--primary-green);
     padding: 8px 15px;
     font-size: 16px;
+    font-weight: 500;
     border: none;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 5px;
+    transition: var(--transition);
+    border-radius: var(--radius-md);
 }
 
 .product-dropdown .user-dropbtn:hover {
-    color: #3e8e41;
+    color: var(--hover-green);
+    background-color: var(--light-green);
+    transform: translateY(-1px);
 }
 
 .product-dropdown .user-dropdown-content {
-    display: none;
+    display: block;
+    visibility: hidden;
+    opacity: 0;
     position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    min-width: 180px;
+    box-shadow: var(--shadow-md);
     z-index: 1000;
-    border-radius: 5px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--glass-border);
+    transition: var(--transition);
+    transform: translateY(10px);
+    overflow: hidden;
 }
 
 .product-dropdown .user-dropdown-content a {
-    color: black;
+    color: var(--text-dark);
     padding: 12px 16px;
     text-decoration: none;
     display: block;
+    font-weight: 500;
+    transition: var(--transition);
+    border-bottom: 1px solid rgba(0,0,0,0.03);
 }
 
 .product-dropdown .user-dropdown-content a:hover {
-    background-color: #f1f1f1;
-    border-radius: 5px;
+    background-color: var(--light-green);
+    color: var(--primary-green);
+    padding-left: 20px;
 }
 
 .product-dropdown:hover .user-dropdown-content {
-    display: block;
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
 }
 
 /* ============================
@@ -203,51 +290,69 @@ body {
    tarjeta de login
 ============================ */
 .login-card {
-    background-color: rgba(255, 255, 255, 0.85); /* Ajusta la transparencia aquí */
-    border-radius: 15px;
-    border: none;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(8px);
+    background: var(--glass-bg);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     width: 100%;
     max-width: 450px;
+    padding: 2rem 1.5rem;
+    transition: var(--transition);
+}
+
+.login-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
 }
 
 .login-card .form-control {
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 1rem;
+    transition: var(--transition);
 }
 
 .login-card .form-control:focus {
-    border-color: #86b7fe;
-    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.15);
+    background-color: #ffffff;
 }
 
 .login-card .card-title {
-    color: #2c3e50;
-    font-weight: 600;
-    font-size: 1.8rem;
+    color: var(--text-dark);
+    font-weight: 700;
+    font-size: 2rem;
+    letter-spacing: -0.5px;
+    margin-bottom: 1.5rem;
 }
 
 .login-card .btn {
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: 500;
-    transition: all 0.3s;
-    background-color: #4CAF50; /* Fondo sólido */
-    border: 1px solid #4CAF50; /* Borde sólido */
-    color: white; /* Texto blanco */
-    margin-right: 10px; /* Espacio entre botones */
+    padding: 12px 24px;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    transition: var(--transition);
+    background-color: var(--primary-green);
+    border: none;
+    color: white;
+    box-shadow: 0 4px 6px rgba(46, 125, 50, 0.2);
 }
 
 .login-card .btn-primary {
-    background-color: #4CAF50;
-    border-color: #4CAF50;
+    background-color: var(--primary-green);
 }
 
 .login-card .btn:hover {
-    background-color: #3e8e41; /* Fondo más oscuro al pasar el mouse */
-    border-color: #3e8e41;
-    color: white; /* Asegurar que el texto se mantenga visible */
+    background-color: var(--hover-green);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(27, 94, 32, 0.3);
+}
+
+.login-card .btn:active {
+    transform: translateY(0);
 }
 
 /* ============================

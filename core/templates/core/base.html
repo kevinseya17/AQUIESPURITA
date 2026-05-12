@@ -7,12 +7,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'core/css/estilos.css' %}">
-    <title>Lacteos Aqui Es Purita</title>
+    <title>Lácteos Aquí Es Purita</title>
 </head>
 <body>
     <div class="container">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <nav class="navbar navbar-expand-lg fixed-top glass-nav">
             <div class="container-fluid">
                 {% load static %}
                 <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
@@ -40,7 +43,7 @@
                             <li class="nav-item product-dropdown">
                                 <button class="user-dropbtn">
                                     <i class="fas fa-box"></i>
-                                    <span>Productos</span>
+                                    <span class="ms-1">Productos</span>
                                 </button>
                                 <div class="user-dropdown-content">
                                     <a href="{% url 'products' %}?categoria=lacteos">Lácteos</a>
@@ -73,7 +76,7 @@
                                 <li class="nav-item user-dropdown">
                                     <button class="user-dropbtn">
                                         <i class="fas fa-user-circle"></i>
-                                        <span>Mi cuenta</span>
+                                        <span class="ms-1">Mi cuenta</span>
                                     </button>
                                     <div class="user-dropdown-content">
                                         <a href="{% url 'perfil' %}">Perfil</a>

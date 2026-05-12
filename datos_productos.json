@@ -1,0 +1,247 @@
+[
+{
+  "model": "core.categoria",
+  "pk": 1,
+  "fields": {
+    "nombre": "Quesos"
+  }
+},
+{
+  "model": "core.categoria",
+  "pk": 2,
+  "fields": {
+    "nombre": "Lacteos"
+  }
+},
+{
+  "model": "core.categoria",
+  "pk": 3,
+  "fields": {
+    "nombre": "Yogures"
+  }
+},
+{
+  "model": "core.producto",
+  "pk": 1,
+  "fields": {
+    "nombre": "Queso campesino",
+    "codigo": "1",
+    "precio": null,
+    "descripcion": "Delicioso queso campesino",
+    "categoria": 1,
+    "cantidad": 13,
+    "imagen": "productos/hq720.jpg",
+    "disponible": true
+  }
+},
+{
+  "model": "core.producto",
+  "pk": 10,
+  "fields": {
+    "nombre": "Queso Ricota",
+    "codigo": "2",
+    "precio": "20000.00",
+    "descripcion": "Deliciosos queso artesanal para untar",
+    "categoria": 1,
+    "cantidad": 0,
+    "imagen": "productos/Queso_ricota.webp",
+    "disponible": true
+  }
+},
+{
+  "model": "core.producto",
+  "pk": 11,
+  "fields": {
+    "nombre": "Leche",
+    "codigo": "3",
+    "precio": "99000.00",
+    "descripcion": "Litro de leche apto para consumo humano",
+    "categoria": 2,
+    "cantidad": 2,
+    "imagen": "productos/images.jpg",
+    "disponible": true
+  }
+},
+{
+  "model": "core.producto",
+  "pk": 12,
+  "fields": {
+    "nombre": "Yogurt de Melocoton",
+    "codigo": "4",
+    "precio": "10000.00",
+    "descripcion": "Delicioso yogurt casero",
+    "categoria": 3,
+    "cantidad": 0,
+    "imagen": "productos/Yogurt_de_melocoton.jpg",
+    "disponible": true
+  }
+},
+{
+  "model": "core.producto",
+  "pk": 14,
+  "fields": {
+    "nombre": "Leche de soya",
+    "codigo": "6",
+    "precio": "5000.00",
+    "descripcion": "Litro de leche de soya artesanal",
+    "categoria": 2,
+    "cantidad": 0,
+    "imagen": "productos/Leche_de_soya.jpg",
+    "disponible": true
+  }
+},
+{
+  "model": "core.producto",
+  "pk": 15,
+  "fields": {
+    "nombre": "Leche De Cabra",
+    "codigo": "7",
+    "precio": "9000.00",
+    "descripcion": "Litro de leche de cabra apto para el consumo humano",
+    "categoria": 2,
+    "cantidad": 1,
+    "imagen": "productos/Leche_de_cabra.jpg",
+    "disponible": true
+  }
+},
+{
+  "model": "core.producto",
+  "pk": 16,
+  "fields": {
+    "nombre": "Yogurt De Mora",
+    "codigo": "8",
+    "precio": "30000.00",
+    "descripcion": "Litro De Delicioso yogurt de mora casero",
+    "categoria": 3,
+    "cantidad": 1,
+    "imagen": "productos/Yogurt_de_mora.jpg",
+    "disponible": true
+  }
+},
+{
+  "model": "core.producto",
+  "pk": 17,
+  "fields": {
+    "nombre": "Yogurt Griego",
+    "codigo": "9",
+    "precio": "5000.00",
+    "descripcion": "Delicioso yogurt griego artesanal",
+    "categoria": 3,
+    "cantidad": 4,
+    "imagen": "productos/yogurt_griego.jpg",
+    "disponible": true
+  }
+},
+{
+  "model": "core.producto",
+  "pk": 18,
+  "fields": {
+    "nombre": "Queso Azul",
+    "codigo": "5",
+    "precio": "9000.00",
+    "descripcion": "Deliciosos queso artesanal Azul",
+    "categoria": 1,
+    "cantidad": 6,
+    "imagen": "productos/Queso_azul.webp",
+    "disponible": true
+  }
+},
+{
+  "model": "core.producto",
+  "pk": 20,
+  "fields": {
+    "nombre": "Queso doble crema",
+    "codigo": "10",
+    "precio": "16000.00",
+    "descripcion": "queso doble crema delicioso",
+    "categoria": 1,
+    "cantidad": 6,
+    "imagen": "productos/Queso_doble_crema.jpg",
+    "disponible": true
+  }
+},
+{
+  "model": "core.producto",
+  "pk": 22,
+  "fields": {
+    "nombre": "queso costeño",
+    "codigo": "2222",
+    "precio": "5255.00",
+    "descripcion": "cremoso",
+    "categoria": 1,
+    "cantidad": 3,
+    "imagen": "productos/cronica-queso-costeno.jpg",
+    "disponible": true
+  }
+},
+{
+  "model": "core.producto",
+  "pk": 23,
+  "fields": {
+    "nombre": "queso cottage",
+    "codigo": "11",
+    "precio": "5000.00",
+    "descripcion": "Es bajo en calorías, con una textura inigualable y un sabor perfecto",
+    "categoria": 1,
+    "cantidad": 4,
+    "imagen": "productos/Es_bajo_en_calorías.jpg",
+    "disponible": true
+  }
+},
+{
+  "model": "core.producto",
+  "pk": 26,
+  "fields": {
+    "nombre": "queso parmesanooo",
+    "codigo": "25",
+    "precio": "400000.00",
+    "descripcion": "queso italiano de consistencia dura, granulosa y grasa",
+    "categoria": 1,
+    "cantidad": 4,
+    "imagen": "productos/parmesan.jpg",
+    "disponible": true
+  }
+},
+{
+  "model": "core.producto",
+  "pk": 30,
+  "fields": {
+    "nombre": "derfdfdsf",
+    "codigo": "2525",
+    "precio": "0.15",
+    "descripcion": "xarol",
+    "categoria": 1,
+    "cantidad": 7,
+    "imagen": "productos/queso_centurion.webp",
+    "disponible": true
+  }
+},
+{
+  "model": "core.producto",
+  "pk": 31,
+  "fields": {
+    "nombre": "queso parmesanof",
+    "codigo": "222244",
+    "precio": "0.06",
+    "descripcion": "rico",
+    "categoria": 2,
+    "cantidad": 5,
+    "imagen": "",
+    "disponible": true
+  }
+},
+{
+  "model": "core.producto",
+  "pk": 33,
+  "fields": {
+    "nombre": "jujuj",
+    "codigo": "4525",
+    "precio": "0.07",
+    "descripcion": "rico",
+    "categoria": 1,
+    "cantidad": 6,
+    "imagen": "",
+    "disponible": true
+  }
+}
+]
