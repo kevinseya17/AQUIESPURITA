@@ -2,45 +2,47 @@
 {% load static %}
 
 {% block content %}
-<div class="container my-5">
+<!-- Fondo fijo -->
+<div class="fixed-background" style="background-image: url('{% static 'core/img/vacas.png' %}');"></div>
+
+<div class="container my-5 profile-container" style="margin-top: 100px !important;">
   <div class="row justify-content-center">
-    <div class="col-lg-7">
-      <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+    <div class="col-lg-8">
+      <div class="profile-glass-card shadow-lg overflow-hidden">
         
         <!-- Encabezado -->
-        <div class="card-header text-center text-white py-5 position-relative"
-             style="background: linear-gradient(135deg, #007bff 0%, #00b4d8 100%);">
-          <h3 class="fw-bold mb-1">Editar Perfil</h3>
-          <p class="text-white-50 mb-0">Actualiza tus datos personales</p>
+        <div class="card-header text-center py-5 position-relative" style="background: rgba(255,255,255,0.2); border-bottom: 1px solid rgba(0,0,0,0.05);">
+          <h3 class="fw-bold mb-1" style="color: var(--primary-green, #2e7d32);"><i class="fas fa-user-edit me-2"></i> Editar Perfil</h3>
+          <p class="text-muted mb-0">Actualiza tus datos personales para mejorar tu experiencia</p>
         </div>
 
         <!-- Cuerpo -->
-        <div class="card-body px-5 py-4 bg-light">
-          <form method="POST" enctype="multipart/form-data">
+        <div class="card-body px-5 py-4">
+          <form method="POST" enctype="multipart/form-data" class="edit-profile-form">
             {% csrf_token %}
 
             <!-- FOTO PERFIL -->
-            <div class="text-center mb-4">
+            <div class="text-center mb-5 mt-3">
               <div class="position-relative d-inline-block">
                 {% if user.perfil and user.perfil.foto_perfil %}
                   <img id="preview"
                        src="{{ user.perfil.foto_perfil.url }}"
                        alt="Foto de perfil"
-                       class="rounded-circle shadow border border-4 border-light"
-                       width="130" height="130"
+                       class="rounded-circle shadow-sm border border-4 border-white"
+                       width="150" height="150"
                        style="object-fit: cover;">
                 {% else %}
                   <img id="preview"
                        src="{% static 'img/default-avatar.png' %}"
                        alt="Foto de perfil"
-                       class="rounded-circle shadow border border-4 border-light"
-                       width="130" height="130"
+                       class="rounded-circle shadow-sm border border-4 border-white"
+                       width="150" height="150"
                        style="object-fit: cover;">
                 {% endif %}
                 <label for="id_foto_perfil"
-                       class="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle p-2 shadow-sm"
-                       style="cursor:pointer;">
-                  <i class="bi bi-camera-fill"></i>
+                       class="camera-btn position-absolute shadow-sm"
+                       title="Cambiar foto">
+                  <i class="fas fa-camera"></i>
                 </label>
               </div>
 
@@ -50,65 +52,74 @@
                      accept="image/*"
                      class="d-none"
                      onchange="previewImage(event)">
-              <p class="text-muted small mt-2">Haz clic en la cámara para subir o cambiar tu foto (opcional)</p>
             </div>
 
             <!-- CAMPOS EDITABLES -->
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Nombre</label>
-              {{ form.first_name }}
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Apellidos</label>
-              {{ form.last_name }}
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Cédula</label>
-              {{ form.cedula }}
-            </div>
-
-            <div class="mb-4">
-              <label class="form-label fw-semibold">Número de contacto</label>
-              {{ form.numero_contacto }}
+            <div class="row g-4 mb-4">
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        {{ form.first_name }}
+                        <label>Nombre</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        {{ form.last_name }}
+                        <label>Apellidos</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        {{ form.cedula }}
+                        <label>Cédula</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        {{ form.numero_contacto }}
+                        <label>Número de contacto</label>
+                    </div>
+                </div>
             </div>
 
             <!-- CAMPOS SOLO LECTURA -->
-            <hr>
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Nombre de usuario</label>
-              <input type="text" class="form-control" value="{{ user.username }}" readonly>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Correo electrónico</label>
-              <input type="email" class="form-control" value="{{ user.email }}" readonly>
+            <div class="read-only-section p-4 rounded-4 mb-4">
+                <h6 class="text-muted mb-3"><i class="fas fa-lock me-2"></i> Datos de la cuenta (Solo Lectura)</h6>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label text-muted small">Nombre de usuario</label>
+                        <input type="text" class="form-control read-only-input" value="{{ user.username }}" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-muted small">Correo electrónico</label>
+                        <input type="email" class="form-control read-only-input" value="{{ user.email }}" readonly>
+                    </div>
+                </div>
             </div>
 
             <!-- ERRORES -->
             {% if form.errors %}
-              <div class="alert alert-danger">
+              <div class="alert alert-danger rounded-3 border-0 shadow-sm">
                 <ul class="mb-0">
                   {% for field in form %}
                     {% for error in field.errors %}
-                      <li>{{ error }}</li>
+                      <li><i class="fas fa-exclamation-circle me-1"></i> {{ error }}</li>
                     {% endfor %}
                   {% endfor %}
                   {% for error in form.non_field_errors %}
-                    <li>{{ error }}</li>
+                    <li><i class="fas fa-exclamation-circle me-1"></i> {{ error }}</li>
                   {% endfor %}
                 </ul>
               </div>
             {% endif %}
 
             <!-- BOTONES -->
-            <div class="d-flex justify-content-between align-items-center mt-4">
-              <a href="{% url 'perfil' %}" class="btn btn-outline-secondary rounded-pill px-4">
-                <i class="bi bi-arrow-left"></i> Cancelar
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center mt-5 gap-3">
+              <a href="{% url 'perfil' %}" class="btn btn-outline-dark rounded-pill px-4 py-2 w-100 w-sm-auto">
+                <i class="fas fa-arrow-left me-2"></i> Cancelar
               </a>
-              <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">
-                <i class="bi bi-check-circle"></i> Guardar cambios
+              <button type="submit" class="btn btn-save rounded-pill px-5 py-2 w-100 w-sm-auto shadow-sm">
+                <i class="fas fa-save me-2"></i> Guardar Cambios
               </button>
             </div>
           </form>
@@ -120,31 +131,102 @@
 
 <!-- ESTILOS -->
 <style>
+/* ============================
+   Rediseño Editar Perfil
+============================ */
+.fixed-background {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+    opacity: 0.6;
+}
+
+.profile-glass-card {
+    background: var(--glass-bg, rgba(255, 255, 255, 0.9));
+    border-radius: var(--radius-lg, 20px);
+    box-shadow: var(--shadow-lg, 0 15px 35px rgba(0,0,0,0.1));
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border, rgba(255,255,255,0.4));
+}
+
 #preview {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
 #preview:hover {
   transform: scale(1.05);
-  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
 }
-.form-label {
-  color: #333;
-  font-size: 0.95rem;
+
+.camera-btn {
+    bottom: 5px;
+    right: 5px;
+    background-color: var(--primary-green, #2e7d32);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 3px solid white;
 }
-.form-control {
-  border-radius: 0.6rem;
-  padding: 0.75rem 1rem;
+.camera-btn:hover {
+    background-color: var(--hover-green, #1b5e20);
+    transform: scale(1.1);
 }
-.form-control:focus {
-  border-color: #00b4d8;
-  box-shadow: 0 0 0 0.2rem rgba(0,180,216,0.25);
+
+.edit-profile-form input[type="text"],
+.edit-profile-form input[type="email"],
+.edit-profile-form input[type="number"] {
+  background-color: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 10px;
+  padding: 1rem 0.75rem;
+  transition: all 0.3s ease;
+  height: calc(3.5rem + 2px);
 }
-.btn-primary {
-  background: linear-gradient(90deg, #007bff, #00b4d8);
+
+.edit-profile-form input:focus {
+  background-color: #fff;
+  border-color: var(--primary-green, #2e7d32);
+  box-shadow: 0 0 0 0.25rem rgba(46, 125, 50, 0.2);
+}
+
+.read-only-section {
+    background: rgba(0,0,0,0.02);
+    border: 1px dashed rgba(0,0,0,0.1);
+}
+
+.read-only-input {
+    background-color: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(0,0,0,0.1) !important;
+    border-radius: 0 !important;
+    padding-left: 0 !important;
+    font-weight: 600;
+    color: var(--text-dark) !important;
+    height: auto !important;
+}
+.read-only-input:focus {
+    box-shadow: none !important;
+}
+
+.btn-save {
+  background-color: var(--primary-green, #2e7d32);
+  color: white;
   border: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
-.btn-primary:hover {
-  background: linear-gradient(90deg, #0069d9, #0096c7);
+.btn-save:hover {
+  background-color: var(--hover-green, #1b5e20);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(46, 125, 50, 0.3) !important;
+  color: white;
 }
 </style>
 
@@ -159,5 +241,16 @@ function previewImage(event) {
     reader.readAsDataURL(file);
   }
 }
+
+// Agregar clases de form-control dinámicamente si no las tienen
+document.addEventListener("DOMContentLoaded", function() {
+    const inputs = document.querySelectorAll('.edit-profile-form input:not([type="file"]):not([type="hidden"]):not(.read-only-input)');
+    inputs.forEach(input => {
+        if (!input.classList.contains('form-control')) {
+            input.classList.add('form-control');
+        }
+        input.setAttribute('placeholder', ' '); // Necesario para floating labels
+    });
+});
 </script>
 {% endblock %}

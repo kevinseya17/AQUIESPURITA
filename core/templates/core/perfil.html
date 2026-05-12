@@ -2,51 +2,72 @@
 {% load static %}
 
 {% block content %}
-<div class="container my-5">
+<!-- Fondo fijo -->
+<div class="fixed-background" style="background-image: url('{% static 'core/img/vacas.png' %}');"></div>
+
+<div class="container my-5 profile-container" style="margin-top: 100px !important;">
     <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="card border-0 shadow-lg rounded-4">
-                <div class="card-body p-4">
+        <div class="col-lg-10">
+            <div class="profile-glass-card">
+                <div class="card-body p-5">
                     <!-- 🧍 Encabezado del perfil -->
-                    <div class="d-flex flex-column flex-md-row align-items-center gap-4 mb-4">
-                        <img src="{% static 'img/default-avatar.png' %}" 
-                             alt="Avatar" class="rounded-circle shadow" width="120" height="120">
-                        <div>
-                            <h3 class="fw-bold text-primary mb-1">{{ first_name }} {{ last_name }}</h3>
-                            <p class="text-muted mb-0">@{{ username }}</p>
-                            <p class="text-muted small"><i class="bi bi-envelope"></i> {{ email }}</p>
+                    <div class="profile-header d-flex flex-column flex-md-row align-items-center gap-4 mb-5">
+                        <div class="avatar-container shadow-lg">
+                            <img src="{% static 'img/default-avatar.png' %}" 
+                                 alt="Avatar" class="profile-avatar">
+                        </div>
+                        <div class="profile-title-area text-center text-md-start">
+                            <h2 class="fw-bold text-dark mb-1">{{ first_name|default:"Usuario" }} {{ last_name|default:"" }}</h2>
+                            <p class="badge profile-username-badge mb-2">@{{ username }}</p>
+                            <p class="text-muted mb-0"><i class="fas fa-envelope me-2"></i>{{ email }}</p>
+                        </div>
+                        <div class="ms-md-auto mt-4 mt-md-0">
+                            <a href="{% url 'editar_perfil' %}" class="btn btn-edit-profile">
+                                <i class="fas fa-user-edit me-2"></i> Editar Perfil
+                            </a>
                         </div>
                     </div>
 
-                    <hr>
-
-                    <!-- 📋 Información personal -->
-                    <div class="row mb-4">
+                    <div class="row g-4 mb-5">
+                        <!-- 📋 Información personal -->
                         <div class="col-md-6">
-                            <h6 class="text-uppercase text-muted fw-semibold">Datos personales</h6>
-                            <ul class="list-unstyled mb-0">
-                                <li><strong>Cédula:</strong> {{ cedula }}</li>
-                                <li><strong>Número de contacto:</strong> {{ numero_contacto }}</li>
-                            </ul>
+                            <div class="info-glass-box h-100 p-4">
+                                <h5 class="info-title mb-4"><i class="fas fa-id-card text-success me-2"></i> Datos Personales</h5>
+                                <div class="info-row">
+                                    <span class="info-label">Cédula</span>
+                                    <span class="info-value">{{ cedula|default:"No registrada" }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Teléfono</span>
+                                    <span class="info-value">{{ numero_contacto|default:"No registrado" }}</span>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6">
-                            <h6 class="text-uppercase text-muted fw-semibold">Cuenta</h6>
-                            <ul class="list-unstyled mb-0">
-                                <li><strong>Usuario:</strong> {{ username }}</li>
-                                <li><strong>Email:</strong> {{ email }}</li>
-                            </ul>
+                            <div class="info-glass-box h-100 p-4">
+                                <h5 class="info-title mb-4"><i class="fas fa-shield-alt text-primary me-2"></i> Seguridad</h5>
+                                <div class="info-row">
+                                    <span class="info-label">Usuario</span>
+                                    <span class="info-value">{{ username }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Contraseña</span>
+                                    <span class="info-value text-muted">••••••••</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <!-- 📦 Historial de pedidos -->
-                    <div class="mt-4">
-                        <h5 class="fw-bold mb-3">📦 Historial de pedidos</h5>
+                    <div class="orders-section mt-5">
+                        <h4 class="fw-bold mb-4 text-dark"><i class="fas fa-box-open text-success me-2"></i> Historial de Pedidos</h4>
+                        
                         {% if pedidos %}
-                            <div class="table-responsive">
-                                <table class="table table-hover align-middle">
-                                    <thead class="table-dark">
+                            <div class="table-responsive rounded-4 shadow-sm">
+                                <table class="table modern-table mb-0">
+                                    <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            <th>N° Pedido</th>
                                             <th>Fecha</th>
                                             <th>Estado</th>
                                             <th class="text-end">Total</th>
@@ -54,37 +75,186 @@
                                     </thead>
                                     <tbody>
                                         {% for pedido in pedidos %}
-                                            <tr>
-                                                <td>#{{ pedido.id }}</td>
-                                                <td>{{ pedido.fecha|date:"d/m/Y H:i" }}</td>
+                                            <tr class="table-row-hover">
+                                                <td class="fw-bold text-muted">#{{ pedido.id }}</td>
+                                                <td>{{ pedido.fecha|date:"d M Y, H:i" }}</td>
                                                 <td>
                                                     {% if pedido.estado == 'pagado' %}
-                                                        <span class="badge bg-success">Pagado</span>
+                                                        <span class="status-badge bg-success-soft text-success"><i class="fas fa-check-circle me-1"></i>Pagado</span>
                                                     {% elif pedido.estado == 'pendiente' %}
-                                                        <span class="badge bg-warning text-dark">Pendiente</span>
+                                                        <span class="status-badge bg-warning-soft text-warning"><i class="fas fa-clock me-1"></i>Pendiente</span>
                                                     {% else %}
-                                                        <span class="badge bg-danger">Cancelado</span>
+                                                        <span class="status-badge bg-danger-soft text-danger"><i class="fas fa-times-circle me-1"></i>Cancelado</span>
                                                     {% endif %}
                                                 </td>
-                                                <td class="text-end fw-bold">${{ pedido.total }}</td>
+                                                <td class="text-end fw-bold text-success">${{ pedido.total|floatformat:2 }}</td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
                                 </table>
                             </div>
                         {% else %}
-                            <p class="text-muted">Aún no tienes pedidos registrados.</p>
+                            <div class="empty-orders-box text-center p-5">
+                                <i class="fas fa-receipt fa-4x text-muted mb-3" style="opacity: 0.3;"></i>
+                                <h5 class="text-dark">No hay pedidos registrados</h5>
+                                <p class="text-muted">Parece que aún no has realizado ninguna compra.</p>
+                                <a href="{% url 'products' %}" class="btn btn-primary mt-3 hero-btn px-4">Ir a la tienda</a>
+                            </div>
                         {% endif %}
                     </div>
 
-                    <!-- 🎛️ Botones -->
-                    <div class="d-flex justify-content-between mt-4">
-                        <a href="{% url 'home' %}" class="btn btn-outline-secondary rounded-pill px-4">⬅ Volver al inicio</a>
-                        <a href="{% url 'editar_perfil' %}" class="btn btn-primary rounded-pill px-4">✏️ Editar perfil</a>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+/* ============================
+   Rediseño de Perfil
+============================ */
+.fixed-background {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+    opacity: 0.6;
+}
+
+.profile-glass-card {
+    background: var(--glass-bg, rgba(255, 255, 255, 0.9));
+    border-radius: var(--radius-lg, 20px);
+    box-shadow: var(--shadow-lg, 0 15px 35px rgba(0,0,0,0.1));
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border, rgba(255,255,255,0.4));
+    overflow: hidden;
+}
+
+.avatar-container {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    border: 5px solid white;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.profile-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-username-badge {
+    background-color: var(--light-green, #e8f5e9);
+    color: var(--primary-green, #2e7d32);
+    font-size: 1rem;
+    padding: 6px 15px;
+    border-radius: 50px;
+    font-weight: 500;
+}
+
+.btn-edit-profile {
+    background-color: white;
+    color: var(--text-dark, #2c3e50);
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 50px;
+    padding: 10px 25px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.btn-edit-profile:hover {
+    background-color: var(--primary-green, #2e7d32);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(46, 125, 50, 0.2);
+}
+
+.info-glass-box {
+    background: rgba(255,255,255,0.6);
+    border-radius: 15px;
+    border: 1px solid rgba(255,255,255,0.8);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+}
+
+.info-title {
+    font-weight: 700;
+    color: var(--text-dark);
+    font-size: 1.1rem;
+    border-bottom: 2px solid rgba(0,0,0,0.05);
+    padding-bottom: 10px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed rgba(0,0,0,0.05);
+}
+
+.info-row:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.info-label {
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.info-value {
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+/* Tablas Modernas */
+.modern-table {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.modern-table thead th {
+    background-color: rgba(46, 125, 50, 0.05);
+    color: #495057;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid rgba(46, 125, 50, 0.1);
+    padding: 15px;
+}
+
+.modern-table tbody td {
+    padding: 15px;
+    vertical-align: middle;
+    border-bottom: 1px solid rgba(0,0,0,0.03);
+}
+
+.table-row-hover:hover {
+    background-color: rgba(46, 125, 50, 0.02);
+}
+
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.bg-success-soft { background-color: #e8f5e9; }
+.bg-warning-soft { background-color: #fff8e1; }
+.bg-danger-soft { background-color: #ffebee; }
+
+.empty-orders-box {
+    background: rgba(255,255,255,0.6);
+    border-radius: 15px;
+    border: 1px dashed rgba(0,0,0,0.1);
+}
+</style>
 {% endblock %}

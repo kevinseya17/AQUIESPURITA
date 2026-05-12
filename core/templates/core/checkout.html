@@ -2,81 +2,114 @@
 {% load static %}
 
 {% block content %}
-<div class="container my-5">
+<!-- Fondo fijo -->
+<div class="fixed-background" style="background-image: url('{% static 'core/img/vacas.png' %}');"></div>
+
+<div class="container my-5 checkout-container" style="margin-top: 100px !important;">
     <div class="row justify-content-center">
-        <div class="col-lg-10">
+        <div class="col-lg-11">
             <div class="row g-4">
                 
                 <!-- Columna izquierda: formulario -->
                 <div class="col-lg-7">
-                    <div class="card shadow-lg border-0 rounded-4">
+                    <div class="checkout-glass-card">
                         <div class="card-body p-5">
-                            <h2 class="fw-bold text-center mb-4">💳 Finalizar compra</h2>
+                            <h2 class="fw-bold text-center mb-4 text-dark">
+                                <i class="fas fa-credit-card text-success me-2"></i> Finalizar Compra
+                            </h2>
 
-                            <form method="post" action="{% url 'procesar_pago' %}" class="needs-validation" novalidate>
+                            <form method="post" action="{% url 'procesar_pago' %}" class="needs-validation checkout-form" novalidate>
                                 {% csrf_token %}
 
                                 <!-- Datos de envío -->
-                                <h5 class="mb-3">📦 Datos de envío</h5>
-                                <div class="row g-3 mb-4">
+                                <h5 class="section-title mb-4"><i class="fas fa-box-open me-2"></i> 1. Datos de envío</h5>
+                                <div class="row g-4 mb-5">
                                     <div class="col-md-6">
-                                        <label class="form-label">Nombre completo</label>
-                                        <input type="text" name="nombre" class="form-control rounded-pill" required>
-                                        <div class="invalid-feedback">Por favor ingresa tu nombre completo.</div>
+                                        <div class="form-floating">
+                                            <input type="text" name="nombre" class="form-control glass-input" id="nombre" placeholder="Nombre completo" required>
+                                            <label for="nombre">Nombre completo</label>
+                                            <div class="invalid-feedback">Ingresa tu nombre.</div>
+                                        </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label">Correo electrónico</label>
-                                        <input type="email" name="email" class="form-control rounded-pill" required>
-                                        <div class="invalid-feedback">Ingresa un correo válido.</div>
+                                        <div class="form-floating">
+                                            <input type="email" name="email" class="form-control glass-input" id="email" placeholder="Correo" required>
+                                            <label for="email">Correo electrónico</label>
+                                            <div class="invalid-feedback">Ingresa un correo válido.</div>
+                                        </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label">Teléfono</label>
-                                        <input type="text" name="telefono" class="form-control rounded-pill" required>
-                                        <div class="invalid-feedback">Por favor ingresa tu número de teléfono.</div>
+                                        <div class="form-floating">
+                                            <input type="text" name="telefono" class="form-control glass-input" id="telefono" placeholder="Teléfono" required>
+                                            <label for="telefono">Teléfono celular</label>
+                                            <div class="invalid-feedback">Ingresa tu teléfono.</div>
+                                        </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label">Dirección</label>
-                                        <input type="text" name="direccion" class="form-control rounded-pill" required>
-                                        <div class="invalid-feedback">Por favor ingresa tu dirección.</div>
+                                        <div class="form-floating">
+                                            <input type="text" name="direccion" class="form-control glass-input" id="direccion" placeholder="Dirección" required>
+                                            <label for="direccion">Dirección de entrega</label>
+                                            <div class="invalid-feedback">Ingresa tu dirección.</div>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <!-- Método de pago -->
-                                <h5 class="mb-3">💰 Método de pago</h5>
-                                <div class="mb-4">
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="radio" name="metodo_pago" value="tarjeta" checked>
-                                        <label class="form-check-label">Tarjeta de crédito / débito</label>
-                                    </div>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="radio" name="metodo_pago" value="efectivo">
-                                        <label class="form-check-label">Pago contra entrega</label>
-                                    </div>
+                                <h5 class="section-title mb-4"><i class="fas fa-wallet me-2"></i> 2. Método de pago</h5>
+                                <div class="payment-methods mb-4">
+                                    <label class="payment-method-card mb-3">
+                                        <input type="radio" name="metodo_pago" value="tarjeta" class="payment-radio" checked>
+                                        <div class="payment-card-content">
+                                            <i class="fas fa-credit-card fa-2x text-primary mb-2"></i>
+                                            <span class="fw-bold">Tarjeta de Crédito / Débito</span>
+                                            <small class="text-muted d-block mt-1">Pago seguro y rápido</small>
+                                        </div>
+                                    </label>
+
+                                    <label class="payment-method-card mb-3">
+                                        <input type="radio" name="metodo_pago" value="efectivo" class="payment-radio">
+                                        <div class="payment-card-content">
+                                            <i class="fas fa-money-bill-wave fa-2x text-success mb-2"></i>
+                                            <span class="fw-bold">Pago contra entrega</span>
+                                            <small class="text-muted d-block mt-1">Paga al recibir en casa</small>
+                                        </div>
+                                    </label>
                                 </div>
 
                                 <!-- Datos tarjeta -->
                                 <div id="tarjeta-section" class="fade-section">
-                                    <div class="row g-3">
-                                        <div class="col-md-6">
-                                            <label class="form-label">Número de tarjeta</label>
-                                            <input type="text" name="numero_tarjeta" class="form-control rounded-pill" placeholder="xxxx xxxx xxxx xxxx">
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label">Expira</label>
-                                            <input type="text" name="expira" class="form-control rounded-pill" placeholder="MM/AA">
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label">CVV</label>
-                                            <input type="text" name="cvv" class="form-control rounded-pill" placeholder="***">
+                                    <div class="credit-card-box p-4 mb-4">
+                                        <div class="row g-3">
+                                            <div class="col-12 mb-2">
+                                                <div class="form-floating">
+                                                    <input type="text" name="numero_tarjeta" class="form-control glass-input" id="num_tarjeta" placeholder="0000 0000 0000 0000">
+                                                    <label for="num_tarjeta">Número de tarjeta</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating">
+                                                    <input type="text" name="expira" class="form-control glass-input" id="expira" placeholder="MM/AA">
+                                                    <label for="expira">Fecha de Expiración</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating">
+                                                    <input type="text" name="cvv" class="form-control glass-input" id="cvv" placeholder="***">
+                                                    <label for="cvv">Código CVV</label>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Botón confirmar -->
                                 <div class="d-grid mt-5">
-                                    <button type="submit" class="btn btn-success btn-lg rounded-pill shadow-sm">
-                                        ✅ Confirmar y pagar ${{ total }}
+                                    <button type="submit" class="btn btn-pay btn-lg">
+                                        <i class="fas fa-lock me-2"></i> Confirmar y Pagar ${{ total|floatformat:2 }}
                                     </button>
+                                    <small class="text-center text-muted mt-3">
+                                        <i class="fas fa-shield-alt"></i> Tu pago está cifrado y seguro.
+                                    </small>
                                 </div>
                             </form>
                         </div>
@@ -85,21 +118,37 @@
 
                 <!-- Columna derecha: resumen -->
                 <div class="col-lg-5">
-                    <div class="card shadow-lg border-0 rounded-4 h-100">
-                        <div class="card-body p-4">
-                            <h5 class="fw-bold mb-3">🛒 Resumen de tu compra</h5>
-                            <div class="scrollable-summary">
-                                {% for item in cart_items %}
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span>{{ item.producto.nombre }} (x{{ item.cantidad }})</span>
-                                        <span class="fw-semibold">${{ item.subtotal }}</span>
+                    <div class="checkout-summary-card sticky-top" style="top: 100px;">
+                        <h4 class="fw-bold mb-4">Resumen del Pedido</h4>
+                        
+                        <div class="scrollable-items mb-4">
+                            {% for item in cart_items %}
+                                <div class="summary-item">
+                                    <div class="item-name">
+                                        <span class="fw-bold text-dark">{{ item.producto.nombre }}</span>
+                                        <small class="text-muted ms-2">x{{ item.cantidad }}</small>
                                     </div>
-                                {% empty %}
-                                    <p>No tienes productos en el carrito.</p>
-                                {% endfor %}
-                            </div>
-                            <hr>
-                            <p class="fw-bold fs-5 text-end">Total: ${{ total }}</p>
+                                    <span class="item-price fw-semibold text-success">${{ item.subtotal|floatformat:2 }}</span>
+                                </div>
+                            {% empty %}
+                                <p class="text-center text-muted my-4">No tienes productos en el carrito.</p>
+                            {% endfor %}
+                        </div>
+                        
+                        <hr class="summary-divider">
+                        
+                        <div class="d-flex justify-content-between align-items-center mt-3 mb-2">
+                            <span class="text-muted">Subtotal</span>
+                            <span class="fw-semibold">${{ total|floatformat:2 }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <span class="text-muted">Envío</span>
+                            <span class="text-success fw-bold">Gratis</span>
+                        </div>
+                        
+                        <div class="total-row p-3 rounded-3 mt-2">
+                            <span>Total a pagar</span>
+                            <span class="total-amount">${{ total|floatformat:2 }}</span>
                         </div>
                     </div>
                 </div>
@@ -110,22 +159,174 @@
 </div>
 
 <style>
-.card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+/* ============================
+   Rediseño Checkout
+============================ */
+.fixed-background {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+    opacity: 0.6;
 }
-.card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+
+.checkout-glass-card {
+    background: var(--glass-bg, rgba(255, 255, 255, 0.85));
+    border-radius: var(--radius-lg, 20px);
+    box-shadow: var(--shadow-lg, 0 15px 35px rgba(0,0,0,0.1));
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border, rgba(255,255,255,0.3));
+    transition: var(--transition, all 0.3s ease);
 }
-input.form-control {
-    padding: 10px 15px;
+
+.section-title {
+    color: var(--primary-green, #2e7d32);
+    font-weight: 700;
+    font-size: 1.2rem;
+    border-bottom: 2px solid rgba(46, 125, 50, 0.1);
+    padding-bottom: 10px;
 }
+
+.glass-input {
+    background-color: rgba(255, 255, 255, 0.6) !important;
+    border: 1px solid rgba(0,0,0,0.1) !important;
+    border-radius: 10px !important;
+    transition: all 0.3s ease !important;
+}
+
+.glass-input:focus {
+    background-color: #fff !important;
+    border-color: var(--primary-green) !important;
+    box-shadow: 0 0 0 0.25rem rgba(46, 125, 50, 0.25) !important;
+}
+
+.form-floating label {
+    color: #6c757d;
+}
+
+/* Payment Methods */
+.payment-methods {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+@media (max-width: 768px) {
+    .payment-methods {
+        grid-template-columns: 1fr;
+    }
+}
+
+.payment-method-card {
+    position: relative;
+    cursor: pointer;
+    display: block;
+}
+
+.payment-radio {
+    position: absolute;
+    opacity: 0;
+}
+
+.payment-card-content {
+    border: 2px solid rgba(0,0,0,0.1);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    background: rgba(255,255,255,0.5);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.payment-radio:checked + .payment-card-content {
+    border-color: var(--primary-green);
+    background: rgba(232, 245, 233, 0.5);
+    box-shadow: 0 5px 15px rgba(46, 125, 50, 0.15);
+}
+
+/* Credit Card Box */
+.credit-card-box {
+    background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.4));
+    border-radius: 15px;
+    border: 1px solid rgba(255,255,255,0.6);
+    box-shadow: inset 0 0 20px rgba(255,255,255,0.5);
+}
+
 .fade-section {
-    transition: all 0.3s ease-in-out;
+    transition: all 0.4s ease-in-out;
+    overflow: hidden;
 }
-.scrollable-summary {
-    max-height: 250px;
+
+/* Pay Button */
+.btn-pay {
+    background-color: var(--primary-green, #2e7d32);
+    color: white;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1.2rem;
+    padding: 15px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+}
+
+.btn-pay:hover {
+    background-color: var(--hover-green, #1b5e20);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(27, 94, 32, 0.4);
+    color: white;
+}
+
+/* Summary Box */
+.checkout-summary-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: var(--radius-lg, 20px);
+    padding: 30px;
+    box-shadow: var(--shadow-md, 0 8px 16px rgba(0,0,0,0.08));
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px dashed rgba(0,0,0,0.1);
+}
+
+.summary-item:last-child {
+    border-bottom: none;
+}
+
+.scrollable-items {
+    max-height: 300px;
     overflow-y: auto;
+    padding-right: 10px;
+}
+
+/* Scrollbar para el resumen */
+.scrollable-items::-webkit-scrollbar {
+    width: 6px;
+}
+.scrollable-items::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.02);
+}
+.scrollable-items::-webkit-scrollbar-thumb {
+    background: rgba(46, 125, 50, 0.3);
+    border-radius: 10px;
+}
+
+.total-row {
+    background: var(--light-green, #e8f5e9);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--primary-green, #2e7d32);
+}
+.total-amount {
+    font-size: 1.8rem;
 }
 </style>
 
@@ -138,8 +339,10 @@ document.addEventListener("DOMContentLoaded", function() {
         radio.addEventListener("change", () => {
             if (radio.value === "tarjeta") {
                 tarjetaSection.style.display = "block";
+                tarjetaSection.style.opacity = "1";
             } else {
                 tarjetaSection.style.display = "none";
+                tarjetaSection.style.opacity = "0";
             }
         });
     });
@@ -147,6 +350,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Ocultar si está seleccionado "efectivo" al cargar
     if (document.querySelector("input[name='metodo_pago']:checked").value !== "tarjeta") {
         tarjetaSection.style.display = "none";
+        tarjetaSection.style.opacity = "0";
     }
 
     // Validación bootstrap
