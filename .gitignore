@@ -12,7 +12,7 @@ venv/
 *.log
 db.sqlite3
 media/
-staticfiles/
+# staticfiles se sube para que Vercel sirva el CSS correctamente
 
 # Variables de entorno — NUNCA subir esto
 .env
