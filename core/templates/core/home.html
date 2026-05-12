@@ -33,4 +33,105 @@
         {% endif %}
     </div>
 </div>
+
+<!-- ============================
+     SECCIÓN DE BENEFICIOS
+============================== -->
+<div class="container my-5 py-5">
+    <div class="row g-4 text-center">
+        <div class="col-md-4">
+            <div class="benefit-card p-4 rounded-4 shadow-sm h-100" style="background: rgba(255,255,255,0.7); border: 1px solid rgba(0,0,0,0.05); backdrop-filter: blur(10px);">
+                <i class="fas fa-truck fa-3x mb-3" style="color: var(--primary-green, #2e7d32);"></i>
+                <h4 class="fw-bold">Envío a Domicilio</h4>
+                <p class="text-muted">Del campo a la puerta de tu casa. Rápido y seguro para mantener la frescura.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="benefit-card p-4 rounded-4 shadow-sm h-100" style="background: rgba(255,255,255,0.7); border: 1px solid rgba(0,0,0,0.05); backdrop-filter: blur(10px);">
+                <i class="fas fa-leaf fa-3x mb-3" style="color: var(--primary-green, #2e7d32);"></i>
+                <h4 class="fw-bold">100% Naturales</h4>
+                <p class="text-muted">Nuestros lácteos son elaborados sin conservantes, con leche fresca de primera calidad.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="benefit-card p-4 rounded-4 shadow-sm h-100" style="background: rgba(255,255,255,0.7); border: 1px solid rgba(0,0,0,0.05); backdrop-filter: blur(10px);">
+                <i class="fas fa-shield-alt fa-3x mb-3" style="color: var(--primary-green, #2e7d32);"></i>
+                <h4 class="fw-bold">Pago Seguro</h4>
+                <p class="text-muted">Transacciones protegidas para tu tranquilidad, ya sea en línea o en efectivo.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================
+     SECCIÓN PRODUCTOS DESTACADOS
+============================== -->
+<div class="container mb-5 pb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold" style="color: var(--primary-green, #2e7d32);">
+            <i class="fas fa-star text-warning me-2"></i> Productos Destacados
+        </h2>
+        <a href="{% url 'products' %}" class="btn btn-outline-success rounded-pill">Ver todos <i class="fas fa-arrow-right ms-1"></i></a>
+    </div>
+
+    {% if productos_destacados %}
+    <div class="row g-4">
+        {% for producto in productos_destacados %}
+        <div class="col-lg-3 col-md-4 col-sm-6">
+            <div class="featured-product-card glass-card shadow-sm h-100 position-relative">
+                <a href="{% url 'product_detail' producto.id %}" class="d-block product-img-wrapper" style="height: 200px; overflow: hidden; border-radius: 15px 15px 0 0;">
+                    {% if producto.imagen %}
+                        <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="w-100 h-100" style="object-fit: cover; transition: transform 0.3s ease;">
+                    {% else %}
+                        <img src="{% static 'core/img/default.png' %}" alt="sin imagen" class="w-100 h-100" style="object-fit: cover; transition: transform 0.3s ease;">
+                    {% endif %}
+                </a>
+                <div class="p-3">
+                    <span class="badge mb-2" style="background-color: var(--light-green, #e8f5e9); color: var(--primary-green);">{{ producto.categoria.nombre }}</span>
+                    <h5 class="fw-bold text-dark text-truncate mb-1">
+                        <a href="{% url 'product_detail' producto.id %}" class="text-decoration-none text-dark">{{ producto.nombre }}</a>
+                    </h5>
+                    <p class="fw-bold fs-5 mb-3" style="color: var(--primary-green);">${{ producto.precio|floatformat:2 }}</p>
+                    <a href="{% url 'add_to_cart' producto.id %}" class="btn btn-primary w-100 rounded-pill">
+                        <i class="fas fa-cart-plus me-1"></i> Añadir
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center glass-card">
+        Aún no hay productos destacados disponibles.
+    </div>
+    {% endif %}
+</div>
+
+<style>
+/* Animaciones para las nuevas secciones del Home */
+.benefit-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.benefit-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+    background: rgba(255,255,255,0.9) !important;
+}
+
+.featured-product-card {
+    background: rgba(255,255,255,0.6);
+    border-radius: 15px;
+    border: 1px solid rgba(255,255,255,0.8);
+    transition: all 0.3s ease;
+}
+.featured-product-card:hover {
+    background: rgba(255,255,255,0.95);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
+}
+.featured-product-card:hover img {
+    transform: scale(1.08);
+}
+</style>
+
 {% endblock %}

@@ -21,7 +21,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
 from .views import (
-    home, products, register, perfil, editar_perfil,
+    home, products, nosotros, register, perfil, editar_perfil,
     login_custom, admin_dashboard, admin_usuarios, admin_productos,
     actualizar_usuario, actualizar_producto, agregar_producto,
     eliminar_producto, agregar_usuario, eliminar_usuario,
@@ -36,6 +36,7 @@ urlpatterns = [
     # === PRINCIPAL Y AUTENTICACIÓN ===
     path('', home, name='home'),
     path('products/', products, name='products'),
+    path('nosotros/', nosotros, name='nosotros'),
     path('register/', register, name='register'),
     path('perfil/', perfil, name='perfil'),
     path('perfil/editar/', editar_perfil, name='editar_perfil'),

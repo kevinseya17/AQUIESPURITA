@@ -1,0 +1,131 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Fondo fijo -->
+<div class="fixed-background" style="background-image: url('{% static 'core/img/vacas.png' %}');"></div>
+
+<div class="container my-5" style="margin-top: 100px !important;">
+    <div class="nosotros-glass-card shadow-lg p-5">
+        <div class="text-center mb-5">
+            <h1 class="fw-bold" style="color: var(--primary-green, #2e7d32);">Nuestra Historia</h1>
+            <p class="lead text-muted">Llevando el sabor puro del campo a tu hogar desde nuestros inicios.</p>
+        </div>
+
+        <div class="row align-items-center g-5 mb-5">
+            <div class="col-lg-6">
+                <div class="image-wrapper rounded-4 overflow-hidden shadow">
+                    <!-- Si no hay imagen real, usamos un degradado verde o el logo -->
+                    <img src="{% static 'core/img/fondo_de_inicio.jpg' %}" alt="Nuestra Granja" class="img-fluid w-100" style="height: 350px; object-fit: cover;">
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <h3 class="fw-bold mb-4 text-dark">¿Quiénes somos?</h3>
+                <p class="text-muted" style="font-size: 1.1rem; line-height: 1.8;">
+                    En <strong>Lácteos Aquí Es Purita</strong>, creemos en la pureza de lo natural. Somos una empresa comprometida con llevar a tu mesa los mejores productos lácteos, elaborados con leche 100% fresca de nuestras vacas felices.
+                </p>
+                <p class="text-muted" style="font-size: 1.1rem; line-height: 1.8;">
+                    Nuestro proceso de elaboración combina las técnicas tradicionales con los más altos estándares de calidad modernos, garantizando que cada queso y yogur mantenga el sabor auténtico del campo.
+                </p>
+            </div>
+        </div>
+
+        <hr class="my-5 border-secondary" style="opacity: 0.1;">
+
+        <div class="row text-center g-4">
+            <div class="col-md-4">
+                <div class="value-card">
+                    <div class="value-icon mb-3">
+                        <i class="fas fa-leaf fa-3x" style="color: var(--primary-green);"></i>
+                    </div>
+                    <h4 class="fw-bold">100% Natural</h4>
+                    <p class="text-muted">Sin conservantes artificiales. Solo lo mejor de la naturaleza.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="value-card">
+                    <div class="value-icon mb-3">
+                        <i class="fas fa-heart fa-3x" style="color: var(--primary-green);"></i>
+                    </div>
+                    <h4 class="fw-bold">Calidad Premium</h4>
+                    <p class="text-muted">Procesos rigurosos para un sabor inigualable.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="value-card">
+                    <div class="value-icon mb-3">
+                        <i class="fas fa-users fa-3x" style="color: var(--primary-green);"></i>
+                    </div>
+                    <h4 class="fw-bold">Hecho con Amor</h4>
+                    <p class="text-muted">Cuidamos a nuestras vacas y a nuestros clientes por igual.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-5 pt-4">
+            <a href="{% url 'products' %}" class="btn btn-primary btn-lg rounded-pill px-5 shadow-sm">
+                Conoce Nuestros Productos <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+/* ============================
+   Diseño Nosotros
+============================ */
+.fixed-background {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+    opacity: 0.6;
+}
+
+.nosotros-glass-card {
+    background: var(--glass-bg, rgba(255, 255, 255, 0.9));
+    border-radius: var(--radius-lg, 20px);
+    box-shadow: var(--shadow-lg, 0 15px 35px rgba(0,0,0,0.15));
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border, rgba(255,255,255,0.4));
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+.image-wrapper {
+    transition: transform 0.3s ease;
+}
+
+.image-wrapper:hover {
+    transform: scale(1.02);
+}
+
+.value-card {
+    background: rgba(255, 255, 255, 0.5);
+    padding: 30px 20px;
+    border-radius: 15px;
+    height: 100%;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.value-card:hover {
+    background: white;
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+.value-icon {
+    transition: transform 0.3s ease;
+}
+
+.value-card:hover .value-icon {
+    transform: scale(1.1);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
+{% endblock %}

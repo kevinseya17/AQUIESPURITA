@@ -32,36 +32,42 @@ from datetime import datetime
 
 # -------------------- Vistas generales --------------------
 
-@login_required
 def home(request):
-    if request.user.is_staff or request.user.is_superuser:
-        return redirect('admin_dashboard')
-    return render(request, 'core/home.html')
+    if request.user.is_authenticated:
+        if request.user.is_staff or request.user.is_superuser:
+            return redirect('admin_dashboard')
+            
+    productos_destacados = Producto.objects.filter(disponible=True, cantidad__gt=0).order_by('-id')[:4]
+    return render(request, 'core/home.html', {'productos_destacados': productos_destacados})
 
 from django.shortcuts import render
 from .models import Producto
 
 def products(request):
     categoria_nombre = request.GET.get('categoria')
+    search_query = request.GET.get('q')
     categoria_obj = None
+    
+    productos = Producto.objects.filter(disponible=True, cantidad__gt=0)
     
     if categoria_nombre:
         try:
             categoria_obj = Categoria.objects.get(nombre__iexact=categoria_nombre)
-            productos = Producto.objects.filter(
-                categoria=categoria_obj,
-                disponible=True,
-                cantidad__gt=0
-            )
+            productos = productos.filter(categoria=categoria_obj)
         except Categoria.DoesNotExist:
-            productos = Producto.objects.filter(disponible=True, cantidad__gt=0)
-    else:
-        productos = Producto.objects.filter(disponible=True, cantidad__gt=0)
+            pass
+            
+    if search_query:
+        productos = productos.filter(nombre__icontains=search_query)
 
     return render(request, 'core/products.html', {
         'productos': productos,
-        'categoria': categoria_obj,  # Enviamos el objeto completo, no solo el nombre
+        'categoria': categoria_obj,
+        'search_query': search_query,
     })
+
+def nosotros(request):
+    return render(request, 'core/nosotros.html')
 
 
 from django.contrib.auth.decorators import login_required
