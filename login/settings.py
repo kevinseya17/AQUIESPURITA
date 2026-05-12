@@ -23,8 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-r9c-(du+u7jz9!dr=l-vqs_+2^$yzy%z9+u2_1srgpd^$6a!s!'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# En producción (Vercel) DEBUG=False. En local DEBUG=True.
+import os
+DEBUG = os.environ.get('DATABASE_URL') is None
 
 ALLOWED_HOSTS = ['*']
 
@@ -133,7 +134,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'core/static'),  # Ruta a tus archivos estáticos
 ]
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
