@@ -1,24 +1,123 @@
 {% extends 'core/base.html' %}
+{% load static crispy_forms_tags %}
 
 {% block content %}
+<!-- Fondo fijo -->
+<div class="fixed-background" style="background-image: url('{% static 'core/img/vacas.png' %}');"></div>
 
-{% load crispy_forms_tags %}
+<div class="container d-flex justify-content-center align-items-center profile-container" style="min-height: 80vh; margin-top: 100px !important;">
+    <div class="login-glass-card shadow-lg p-5">
+        <div class="text-center mb-4">
+            <h2 class="fw-bold" style="color: var(--primary-green, #2e7d32);">
+                <i class="fas fa-user-plus me-2"></i> Crear Cuenta
+            </h2>
+            <p class="text-muted">Únete a la familia de Lácteos Purita</p>
+        </div>
 
-<h3>REGISTRO DE USUARIO</h3>
+        <form id="register-form" action="" method="post" class="auth-form">
+            {% csrf_token %}
+            
+            <div class="form-container">
+                {{ form | crispy }}
+            </div>
 
-<br>
-
-<form id="register-form" action="" method="post">
-    {% csrf_token %}
-
-    <div class="card mx-auto" style="width: 30rem;">
-      <div class="card-body">
-        <h5 class="card-title">Complete todos los campos</h5>
-        {{ form | crispy }}
-        <a href={% url 'home' %} class="card-link">Inicio</a>
-        <a href={% url 'login' %} class="card-link">Iniciar sesion</a>
-        <button class="btn btn-sm btn-primary float-end" type="submit">Registrarse</button>
-      </div>
+            <div class="d-grid gap-3 mt-4">
+                <button class="btn btn-auth btn-lg shadow-sm" type="submit">
+                    Registrarse <i class="fas fa-check-circle ms-2"></i>
+                </button>
+                
+                <div class="d-flex flex-column flex-sm-row justify-content-between mt-3 text-center gap-2">
+                    <a href="{% url 'home' %}" class="text-muted text-decoration-none auth-link">
+                        <i class="fas fa-home"></i> Volver al Inicio
+                    </a>
+                    <a href="{% url 'login' %}" class="text-decoration-none auth-link" style="color: var(--primary-green);">
+                        ¿Ya tienes cuenta? <strong>Ingresa aquí</strong>
+                    </a>
+                </div>
+            </div>
+        </form>
     </div>
-</form>
+</div>
+
+<style>
+/* ============================
+   Rediseño Login y Registro
+============================ */
+.fixed-background {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+    opacity: 0.6;
+}
+
+.login-glass-card {
+    background: var(--glass-bg, rgba(255, 255, 255, 0.9));
+    border-radius: var(--radius-lg, 20px);
+    box-shadow: var(--shadow-lg, 0 15px 35px rgba(0,0,0,0.15));
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border, rgba(255,255,255,0.4));
+    width: 100%;
+    max-width: 500px; /* Un poco más ancho para el registro */
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+.auth-form input {
+    background-color: rgba(255, 255, 255, 0.6) !important;
+    border: 1px solid rgba(0,0,0,0.1) !important;
+    border-radius: 10px !important;
+    padding: 12px 15px !important;
+    transition: all 0.3s ease !important;
+}
+
+.auth-form input:focus {
+    background-color: #fff !important;
+    border-color: var(--primary-green, #2e7d32) !important;
+    box-shadow: 0 0 0 0.25rem rgba(46, 125, 50, 0.2) !important;
+}
+
+.auth-form label {
+    font-weight: 600;
+    color: var(--text-dark, #2c3e50);
+    margin-bottom: 8px;
+}
+
+/* Fix para los help texts de los campos de registro */
+.help-block {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-top: 5px;
+}
+
+.btn-auth {
+    background-color: var(--primary-green, #2e7d32);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-weight: 700;
+    padding: 12px;
+    transition: all 0.3s ease;
+}
+
+.btn-auth:hover {
+    background-color: var(--hover-green, #1b5e20);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(46, 125, 50, 0.3) !important;
+    color: white;
+}
+
+.auth-link {
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+}
+.auth-link:hover {
+    opacity: 0.7;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
 {% endblock %}
