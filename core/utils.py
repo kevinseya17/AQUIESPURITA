@@ -1,6 +1,6 @@
 from .models import Auditoria
 
-def registrar_accion(request, accion, modelo_afectado=None, objeto_id=None):
+def registrar_accion(request, accion, modelo_afectado=None, objeto_id=None, detalle=None, producto=None, cantidad=None):
     usuario = request.user if request.user.is_authenticated else None
 
     # ✅ Detectar el tipo de usuario
@@ -18,5 +18,8 @@ def registrar_accion(request, accion, modelo_afectado=None, objeto_id=None):
         tipo_usuario=tipo,
         accion=accion,
         modelo_afectado=modelo_afectado,
-        objeto_id=objeto_id
+        objeto_id=objeto_id,
+        detalle=detalle,
+        producto=producto,
+        cantidad=cantidad
     )

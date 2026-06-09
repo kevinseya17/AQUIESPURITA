@@ -142,6 +142,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # VARIABLES DE REDIRECCION DE LOGIN Y LOGOUT 
+LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = '/products/'
 LOGOUT_REDIRECT_URL = 'home'
 

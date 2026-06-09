@@ -1,5 +1,5 @@
 {% extends 'core/base.html' %}
-{% load static %}
+{% load static l10n %}
 
 {% block content %}
 <!-- Fondo fijo -->
@@ -153,7 +153,7 @@
                                             <td>
                                                 <div class="input-group input-group-sm">
                                                     <span class="input-group-text border-0 bg-transparent text-success">$</span>
-                                                    <input type="number" name="precio_{{ producto.id }}" step="0.01" value="{{ producto.precio }}" class="form-control glass-input border-0 bg-transparent">
+                                                    <input type="number" name="precio_{{ producto.id }}" step="0.01" value="{{ producto.precio|unlocalize }}" class="form-control glass-input border-0 bg-transparent">
                                                 </div>
                                             </td>
                                             <td>

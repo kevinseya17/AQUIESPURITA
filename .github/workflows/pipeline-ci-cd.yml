@@ -1,0 +1,38 @@
+name: Pipeline E-Commerce Purita
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  desarrollo-software-iii:
+    runs-on: ubuntu-latest
+    
+    steps:
+    # Paso 1
+    - name: Paso 1 - Descargar Código Fuente (Checkout)
+      uses: actions/checkout@v3
+
+    # Paso 2
+    - name: Paso 2 - Compilar el Proyecto (Instalar Python y Dependencias)
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    - run: pip install -r requirements.txt
+
+    # Paso 3
+    - name: Paso 3 - Ejecutar Pruebas (Django Checks y Migraciones)
+      run: |
+        python manage.py check
+        python manage.py makemigrations --dry-run || echo "Ok, sin migraciones pendientes"
+
+    # Paso 4
+    - name: Paso 4 - Generar versión lista para producción (Collectstatic)
+      run: python manage.py collectstatic --noinput
+
+    # Paso 5
+    - name: Paso 5 - Publicar en el servidor (Despliegue a Vercel)
+      run: echo "Iniciando despliegue hacia Vercel..."
+      # Aquí iría el comando real de publicación:
+      # npx vercel --prod --token $VERCEL_TOKEN

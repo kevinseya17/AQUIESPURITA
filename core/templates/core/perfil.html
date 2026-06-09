@@ -78,15 +78,21 @@
                                             <tr class="table-row-hover">
                                                 <td class="fw-bold text-muted">#{{ pedido.id }}</td>
                                                 <td>{{ pedido.fecha|date:"d M Y, H:i" }}</td>
-                                                <td>
-                                                    {% if pedido.estado == 'pagado' %}
-                                                        <span class="status-badge bg-success-soft text-success"><i class="fas fa-check-circle me-1"></i>Pagado</span>
-                                                    {% elif pedido.estado == 'pendiente' %}
-                                                        <span class="status-badge bg-warning-soft text-warning"><i class="fas fa-clock me-1"></i>Pendiente</span>
-                                                    {% else %}
-                                                        <span class="status-badge bg-danger-soft text-danger"><i class="fas fa-times-circle me-1"></i>Cancelado</span>
-                                                    {% endif %}
-                                                </td>
+                                                 <td>
+                                                     {% if pedido.estado == 'entregado' %}
+                                                         <span class="status-badge bg-success-soft text-success"><i class="fas fa-check-circle me-1"></i>Entregado</span>
+                                                     {% elif pedido.estado == 'pendiente' %}
+                                                         <span class="status-badge bg-warning-soft text-warning"><i class="fas fa-clock me-1"></i>Recibido</span>
+                                                     {% elif pedido.estado == 'pagado' %}
+                                                         <span class="status-badge bg-success-soft text-primary" style="background-color: #e3f2fd; color: #0d6efd !important;"><i class="fas fa-hand-holding-usd me-1"></i>Pago Confirmado</span>
+                                                     {% elif pedido.estado == 'preparacion' %}
+                                                         <span class="status-badge bg-info-soft text-info"><i class="fas fa-box me-1"></i>En Preparación</span>
+                                                     {% elif pedido.estado == 'enviado' %}
+                                                         <span class="status-badge bg-primary-soft text-primary"><i class="fas fa-truck me-1"></i>En Camino</span>
+                                                     {% else %}
+                                                         <span class="status-badge bg-danger-soft text-danger"><i class="fas fa-times-circle me-1"></i>Cancelado</span>
+                                                     {% endif %}
+                                                 </td>
                                                 <td class="text-end fw-bold text-success">${{ pedido.total|floatformat:2 }}</td>
                                             </tr>
                                         {% endfor %}
@@ -250,6 +256,8 @@
 .bg-success-soft { background-color: #e8f5e9; }
 .bg-warning-soft { background-color: #fff8e1; }
 .bg-danger-soft { background-color: #ffebee; }
+.bg-info-soft { background-color: #e3f2fd; }
+.bg-primary-soft { background-color: #e8eaf6; }
 
 .empty-orders-box {
     background: rgba(255,255,255,0.6);

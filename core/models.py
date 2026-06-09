@@ -73,8 +73,11 @@ class Producto(models.Model):
 # ---------------- Pedido ----------------
 class Pedido(models.Model):
     ESTADOS = [
-        ('pendiente', 'Pendiente'),
-        ('pagado', 'Pagado'),
+        ('pendiente', 'Recibido'),
+        ('pagado', 'Pago Confirmado'),
+        ('preparacion', 'En Preparación'),
+        ('enviado', 'Enviado'),
+        ('entregado', 'Entregado'),
         ('cancelado', 'Cancelado'),
     ]
 

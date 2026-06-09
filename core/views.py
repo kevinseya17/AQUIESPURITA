@@ -7,7 +7,11 @@ from django.db.models import Avg
 from .models import Perfil, Producto, Categoria
 from .cart import Carrito
 from .forms import CustomUserCreationForm, EditarPerfilForm
-from django.db.models import Sum, F
+from django.db.models import Sum, F, Count
+from django.db.models.functions import TruncDate
+from django.utils import timezone
+from datetime import timedelta
+import json
 from django.db import transaction
 import uuid
 import pytz
@@ -257,7 +261,30 @@ def login_custom(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
 
-        user = authenticate(request, username=username, password=password)
+        # --- AUTENTICACIÓN VÍA MICROSERVICIO SERVERLESS ---
+        import urllib.request
+        import json
+        from django.contrib.auth.models import User
+        
+        user = None
+        try:
+            import os
+            url = os.environ.get('AUTH_MICROSERVICE_URL', 'http://localhost:8001/login')
+            data = json.dumps({'username': username, 'password': password}).encode('utf-8')
+            req = urllib.request.Request(url, data=data, headers={'Content-Type': 'application/json'})
+            with urllib.request.urlopen(req) as response:
+                res_data = json.loads(response.read().decode())
+                if res_data.get('status') == 'success':
+                    # Si el microservicio dice que es correcto, buscamos o creamos el usuario en Django
+                    user, created = User.objects.get_or_create(username=username)
+                    if created:
+                        # Si se acaba de crear, le damos permisos para probar el panel de admin
+                        user.is_staff = True
+                        user.is_superuser = True
+                        user.save()
+        except Exception as e:
+            print("Error conectando al microservicio (¿Está encendido el API Gateway?):", e)
+        # ----------------------------------------------------
 
         if user is not None:
             login(request, user)
@@ -273,6 +300,9 @@ def login_custom(request):
             if not nombre_usuario:
                 nombre_usuario = user.username
 
+            from django.utils import timezone
+            from .utils import registrar_accion
+            
             # Fecha y hora local
             fecha_actual = timezone.localtime(timezone.now()).strftime("%Y-%m-%d")
             hora_actual = timezone.localtime(timezone.now()).strftime("%H:%M:%S")
@@ -298,13 +328,15 @@ def login_custom(request):
                 return redirect('home')
 
         else:
+            from django.contrib.auth.forms import AuthenticationForm
             return render(
                 request,
                 'registration/login.html',
-                {'error': 'Usuario o contraseña incorrectos'}
+                {'error': 'Usuario o contraseña incorrectos', 'form': AuthenticationForm()}
             )
 
-    return render(request, 'registration/login.html')
+    from django.contrib.auth.forms import AuthenticationForm
+    return render(request, 'registration/login.html', {'form': AuthenticationForm()})
 
 # -------------------- Panel de administrador --------------------
 
@@ -324,6 +356,35 @@ def admin_dashboard(request):
     # 🔍 Registrar acceso al panel de administración
     registrar_accion(request, "Accedió al panel de administración", modelo_afectado="Dashboard")
 
+    # --- Lógica de Analítica para Gráficos ---
+    hoy = timezone.localtime(timezone.now()).date()
+    hace_una_semana = hoy - timedelta(days=7)
+
+    # 1. Ventas de los últimos 7 días
+    ventas_por_dia = Pedido.objects.filter(fecha__date__gte=hace_una_semana)\
+        .annotate(dia=TruncDate('fecha'))\
+        .values('dia')\
+        .annotate(total=Sum('total'))\
+        .order_by('dia')
+
+    labels_ventas = [v['dia'].strftime('%d %b') for v in ventas_por_dia]
+    data_ventas = [float(v['total']) for v in ventas_por_dia]
+
+    # 2. Distribución de Productos por Categoría
+    cat_dist = Producto.objects.values('categoria__nombre')\
+        .annotate(count=Count('id'))\
+        .order_by('-count')
+    
+    labels_cat = [c['categoria__nombre'] or "Sin Categoría" for c in cat_dist]
+    data_cat = [c['count'] for c in cat_dist]
+
+    # 3. Estados de Pedidos
+    estados_dist = Pedido.objects.values('estado')\
+        .annotate(count=Count('id'))
+    
+    labels_estado = [dict(Pedido.ESTADOS).get(e['estado'], e['estado']) for e in estados_dist]
+    data_estado = [e['count'] for e in estados_dist]
+
     context = {
         'total_usuarios': total_usuarios,
         'total_productos': total_productos,
@@ -331,6 +392,13 @@ def admin_dashboard(request):
         'valor_total_inventario': valor_total_inventario,
         'ultimos_usuarios': ultimos_usuarios,
         'ultimos_productos': ultimos_productos,
+        # Datos para Chart.js
+        'labels_ventas': json.dumps(labels_ventas),
+        'data_ventas': json.dumps(data_ventas),
+        'labels_cat': json.dumps(labels_cat),
+        'data_cat': json.dumps(data_cat),
+        'labels_estado': json.dumps(labels_estado),
+        'data_estado': json.dumps(data_estado),
     }
     return render(request, 'core/admin_dashboard.html', context)
 
@@ -374,7 +442,11 @@ def admin_productos(request):
             producto.codigo = request.POST.get(f'codigo_{producto_id}')
             producto.descripcion = request.POST.get(f'descripcion_{producto_id}')
             precio_raw = request.POST.get(f'precio_{producto_id}', '').strip()
-            producto.precio = float(precio_raw) if precio_raw else None
+            if precio_raw:
+                try:
+                    producto.precio = float(precio_raw)
+                except ValueError:
+                    pass  # Mantener el precio anterior si el valor no es válido
 
             producto.categoria_id = request.POST.get(f'categoria_{producto_id}')
             producto.cantidad = request.POST.get(f'cantidad_{producto_id}')
@@ -1125,6 +1197,7 @@ def procesar_pago(request):
             total = cart.get_total()
 
             # === Determinar estado según método de pago ===
+            # Con efectivo queda 'pendiente'. Con tarjeta pasa a 'pagado' (Pago Confirmado)
             estado = "pendiente" if metodo_pago.lower() == "efectivo" else "pagado"
 
             # === Crear pedido ===

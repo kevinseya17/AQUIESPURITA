@@ -110,6 +110,21 @@
                             </div>
                         </div>
                     </div>
+
+                <!-- Sección de Gráficos Analíticos -->
+                <div class="row g-4 mb-5">
+                    <div class="col-lg-8">
+                        <div class="card glass-card-inner border-0 p-4">
+                            <h5 class="fw-bold mb-4 text-dark"><i class="fas fa-chart-line me-2"></i> Tendencia de Ventas (7 días)</h5>
+                            <canvas id="chartVentas" style="max-height: 300px;"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card glass-card-inner border-0 p-4">
+                            <h5 class="fw-bold mb-4 text-dark"><i class="fas fa-chart-pie me-2"></i> Productos por Categoría</h5>
+                            <canvas id="chartCategorias" style="max-height: 300px;"></canvas>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="row g-4">
@@ -310,4 +325,72 @@
     background-color: rgba(255,255,255,0.5);
 }
 </style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Gráfico de Ventas
+        const ctxVentas = document.getElementById('chartVentas').getContext('2d');
+        new Chart(ctxVentas, {
+            type: 'line',
+            data: {
+                labels: {{ labels_ventas|safe }},
+                datasets: [{
+                    label: 'Ventas ($)',
+                    data: {{ data_ventas|safe }},
+                    borderColor: '#2e7d32',
+                    backgroundColor: 'rgba(46, 125, 50, 0.1)',
+                    borderWidth: 3,
+                    pointBackgroundColor: '#2e7d32',
+                    pointRadius: 4,
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { borderDash: [5, 5], color: 'rgba(0,0,0,0.05)' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // Gráfico de Categorías
+        const ctxCat = document.getElementById('chartCategorias').getContext('2d');
+        new Chart(ctxCat, {
+            type: 'doughnut',
+            data: {
+                labels: {{ labels_cat|safe }},
+                datasets: [{
+                    data: {{ data_cat|safe }},
+                    backgroundColor: [
+                        '#2e7d32', '#43a047', '#66bb6a', '#81c784', '#a5d6a7', '#c8e6c9'
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom', labels: { boxWidth: 12, padding: 15 } }
+                },
+                cutout: '70%'
+            }
+        });
+    });
+</script>
 {% endblock %}
