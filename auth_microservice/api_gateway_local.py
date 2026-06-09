@@ -1,6 +1,6 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from handler import lambda_handler
+from auth_microservice.handler import lambda_handler
 
 class APIGatewayHandler(BaseHTTPRequestHandler):
     def do_GET(self):

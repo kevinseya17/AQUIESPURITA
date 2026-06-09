@@ -1,6 +1,6 @@
 import json
-from application.use_cases import AuthUseCase
-from adapters.in_memory_repository import InMemoryUserRepository
+from auth_microservice.application.use_cases import AuthUseCase
+from auth_microservice.adapters.in_memory_repository import InMemoryUserRepository
 
 # 1. Configuración de dependencias (Inyección de Dependencias)
 # Elegimos qué base de datos usar y se la pasamos al caso de uso.
