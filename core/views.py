@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
+45dedef
 from django.db.models import Avg
 from .models import Perfil, Producto, Categoria
 from .cart import Carrito
