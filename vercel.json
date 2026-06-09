@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "auth_microservice/api_gateway_local.py",
+      "src": "ms_gateway.py",
       "use": "@vercel/python"
     },
     {
@@ -14,7 +14,7 @@
   "routes": [
     {
       "src": "/api/ms-login(.*)",
-      "dest": "auth_microservice/api_gateway_local.py"
+      "dest": "ms_gateway.py"
     },
     {
       "src": "/(.*)",
