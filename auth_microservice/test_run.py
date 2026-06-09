@@ -1,4 +1,4 @@
-from handler import lambda_handler
+from auth_microservice.handler import lambda_handler
 import json
 
 def run_test():
