@@ -1,6 +1,6 @@
 from typing import Optional
-from domain.entities import User
-from domain.ports import UserRepositoryPort
+from auth_microservice.domain.entities import User
+from auth_microservice.domain.ports import UserRepositoryPort
 
 class InMemoryUserRepository(UserRepositoryPort):
     """

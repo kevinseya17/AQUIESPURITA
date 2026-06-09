@@ -1,5 +1,5 @@
 from typing import Dict, Any, Tuple
-from domain.ports import UserRepositoryPort
+from auth_microservice.domain.ports import UserRepositoryPort
 
 class AuthUseCase:
     """
