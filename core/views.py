@@ -89,7 +89,7 @@ def perfil(request):
         perfil = None
 
     # Traer los pedidos del usuario
-    pedidos = Pedido.objects.filter(usuario=user).order_by('-fecha')
+    pedidos = Pedido.objects.filter(usuar  io=user).order_by('-fecha')
 
     context = {
         'username': user.username,
