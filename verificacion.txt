@@ -1,0 +1,23 @@
+﻿149 | CI/CD Pipeline
+156 | 8. Pipeline CI/CD ù GitHub Actions
+162 |    Nombre del workflow: ½Pipeline E-Commerce Purita╗
+165 | 8.2 Pasos del Pipeline
+177 | Ejecutar Pruebas ù Django Checks y Migraciones
+205 | 9. Implementaci¾n del Sistema
+206 | 9.1 M¾dulo de Autenticaci¾n y Perfiles
+214 | Aislamiento Funcional (test_run.py): Para validar que la Capa de Dominio no esta acoplada 
+216 | 9.1.1 Pruebas de Aislamiento del Microservicio
+217 | 9.2 M¾dulo de Catßlogo y Productos
+223 | 9.3 M¾dulo de Carrito de Compras
+228 | 9.4 M¾dulo de Pedidos y Checkout
+233 | 9.5 M¾dulo de Facturaci¾n Electr¾nica
+241 | 9.6 M¾dulo de Reportes
+246 | 9.7 M¾dulo de AuditorÝa
+252 | 9.8 Pipeline CI/CD Automatizado con GitHub Actions
+253 | Ningun cambio es promovido a la plataforma principal de manera manual ni arbitraria. El en
+254 | Paso 1 - Descargar y Aislar (Checkout): Se instancia una maquina virtual ubuntu-latest en 
+255 | Paso 2 - Compilar Entorno (Instalar Python y Dependencias): Mediante actions/setup-python@
+256 | Paso 3 - Pruebas e Integridad del Sistema (Django Checks): Es el paso mas critico. GitHub 
+257 | Paso 4 - Generar Version de Produccion (Collectstatic): "python manage.py collectstatic --
+258 | Paso 5 - Despliegue Multi-Cloud Zero-Downtime (Publish): Solo si los cuatro pasos anterior
+264 | 9.9 Importancia del Pipeline en el Contexto Academico y Empresarial

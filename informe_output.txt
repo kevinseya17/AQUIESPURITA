@@ -1,0 +1,245 @@
+INFORME TÉCNICO DE PROYECTO
+E-Commerce  «Lácteos Aquí Es Purita»
+Asignatura: Desarrollo de Software III
+Universidad del Valle  ·  2025
+Integrantes:
+Kevin Camilo Molina Salazar  ·  Frontend
+Santiago Bedón Gómez  ·  Backend
+Daniela Martínez Fontal  ·  Admin BD y Documentación
+1. Nombre del Proyecto
+Implementación E-Commerce «Lácteos Aquí Es Purita»
+2. Descripción General
+El proyecto surge por la necesidad de digitalizar y modernizar la comercialización de productos lácteos artesanales. Se construyó una plataforma web completa que integra módulos de catálogo, carrito de compras, facturación electrónica, gestión de inventario, auditoría de acciones y reportes gerenciales, todo sostenido por una arquitectura de microservicios basada en el patrón Hexagonal.
+Racional de negocio: ofrecer una experiencia de compra intuitiva con carrito, pagos seguros y seguimiento de pedidos en tiempo real.
+Eficiencia operacional: optimizar el control de ventas, inventario y atención al cliente desde un panel administrativo centralizado.
+Fundamento técnico: arquitectura modular basada en API REST que garantiza escalabilidad y fácil mantenimiento.
+3. Planteamiento del Problema
+La empresa «Lácteos Aquí es Purita» gestionaba sus ventas y procesos de forma manual o con herramientas limitadas, lo que generaba errores en el registro de pedidos, demoras en la atención y escaso control del inventario. Además, carecía de un canal digital de ventas, situación que afectaba tanto la experiencia del cliente como la competitividad del negocio en un mercado cada vez más digitalizado.
+Para resolver esta problemática se requería una solución tecnológica que permitiera:
+Digitalizar el proceso de venta de extremo a extremo.
+Controlar el inventario en tiempo real con alertas automáticas.
+Generar facturas electrónicas con código CUFE y datos de la DIAN.
+Registrar y auditar cada acción realizada dentro del sistema.
+Publicar la plataforma en la nube con despliegue automatizado.
+4. Objetivo Principal y Objetivos Específicos
+4.1 Objetivo General
+Diseñar e implementar una arquitectura de software integrada, escalable y basada en la nube que garantice buen rendimiento, alta disponibilidad y optimización de costos para la tienda en línea de Lácteos Aquí Es Purita.
+4.2 Objetivos Específicos
+Integrar los módulos del sistema y servicios externos mediante API REST.
+Permitir la expansión con nuevas funcionalidades sin afectar la estabilidad del núcleo.
+Implementar infraestructura en la nube con base de datos SQL (PostgreSQL en producción) para asegurar rendimiento y disponibilidad.
+Optimizar costos usando recursos bajo demanda (Render.com Free Tier, Cloudinary, GitHub Actions).
+Automatizar el ciclo de integración y entrega continua (CI/CD) mediante GitHub Actions.
+5. Alcance del Proyecto
+La plataforma provee a los usuarios finales una experiencia de compra completa, mientras que los administradores disponen de herramientas de gestión avanzadas. Las funcionalidades implementadas se dividen en dos perfiles:
+5.1 Perfil Cliente
+Registro, inicio de sesión y gestión del perfil personal (foto, cédula, contacto).
+Catálogo de productos con categorías, imágenes optimizadas y descripción detallada.
+Carrito de compras persistente en sesión con incremento, decremento y limpieza.
+Proceso de checkout con dirección de entrega, método de pago y confirmación.
+Generación y visualización de factura electrónica con CUFE (código único DIAN).
+5.2 Perfil Administrador
+Panel de control con métricas de ventas, usuarios y estado de pedidos.
+CRUD completo de productos, categorías y usuarios.
+Gestión de pedidos con estados: Recibido → Pago Confirmado → En Preparación → Enviado → Entregado.
+Reporte diario exportable en PDF y Excel.
+Log de auditoría exportable con filtros por usuario, acción y fecha.
+6. Capas de la Arquitectura
+El sistema implementa la Arquitectura Hexagonal (Puertos y Adaptadores), también conocida como Ports & Adapters. Esta arquitectura garantiza que el núcleo de negocio permanezca aislado de los detalles de infraestructura, haciendo el sistema fácilmente testeable y extensible. Se compone de tres grandes capas:
+6.1 Capa de Dominio (núcleo)
+Contiene las entidades de negocio y los puertos (interfaces abstractas). No depende de ninguna tecnología externa. Es el corazón del sistema.
+📁 auth_microservice/domain/entities.py
+   → Entidad User (dataclass): id, username, email, password_hash, is_active
+   → Método verify_password() encapsula la lógica de validación de credenciales.
+📁 auth_microservice/domain/ports.py
+   → Puerto UserRepositoryPort (ABC): define get_user_by_username() y save_user()
+   → El dominio NUNCA conoce si la BD es SQLite, PostgreSQL o un dict en memoria.
+6.2 Capa de Aplicación (casos de uso)
+Orquesta la lógica de negocio interactuando exclusivamente con los puertos. No accede a bases de datos ni al framework web directamente.
+📁 auth_microservice/application/use_cases.py
+   → Clase AuthUseCase: recibe un UserRepositoryPort por inyección de dependencias.
+   → Método login(username, password) → (bool, token_o_mensaje)
+   → En producción retornaría un JWT firmado; actualmente retorna token simulado.
+📁 core/views.py  (Capa de aplicación Django)
+   → Contiene la lógica de: autenticación, carrito, checkout, facturación,
+     reportes, auditoría, CRUD de productos y usuarios.
+6.3 Capa de Infraestructura (adaptadores)
+Implementa concretamente los puertos. Contiene todo lo que es «externo»: base de datos, ORM, almacenamiento de imágenes, API Gateway y framework web.
+📁 auth_microservice/adapters/in_memory_repository.py
+   → InMemoryUserRepository: implementa UserRepositoryPort usando un dict en RAM.
+   → Puede reemplazarse por SqliteUserRepository o PostgresRepository sin tocar el dominio.
+📁 core/models.py  (Adaptador ORM Django)
+   → Modelos: Perfil, Categoria, Producto, Pedido, PedidoItem,
+              Factura, FacturaItem, Notificacion, Auditoria.
+📁 ms_gateway.py  (API Gateway local)
+   → Enrutador central que despacha peticiones al microservicio de autenticación.
+   → Punto único de entrada para escalar hacia múltiples microservicios futuros.
+Servicios externos integrados:
+   → Cloudinary: almacenamiento y CDN de imágenes de productos y perfiles.
+   → PostgreSQL (Render): base de datos en producción.
+   → WhiteNoise: servicio de archivos estáticos sin servidor dedicado.
+6.4 Diagrama de capas resumido
+DOMINIO
+APLICACIÓN
+INFRAESTRUCTURA
+• entities.py
+• ports.py
+• use_cases.py
+• views.py
+• adapters/
+• models.py
+• ms_gateway.py
+• Cloudinary
+• PostgreSQL
+7. Herramientas y Stack Tecnológico
+Componente
+Tecnología / Herramienta
+Backend Framework
+Python 3.11 / 3.12 — Django 5.1.7
+Microservicio Auth
+Python puro con patrón Hexagonal (sin Django)
+Frontend
+HTML5, CSS3, JavaScript — Bootstrap 5 + Crispy Forms
+Base de datos local
+SQLite 3 (desarrollo y pruebas locales)
+Base de datos prod.
+PostgreSQL vía dj-database-url + psycopg2-binary
+Almacenamiento imgs.
+Cloudinary (django-cloudinary-storage)
+Archivos estáticos
+WhiteNoise Middleware (sin servidor de archivos externo)
+Reportes PDF
+ReportLab 4.4.4
+Reportes Excel
+openpyxl 3.1.5
+Generación QR
+qrcode 8.2
+Nube / Hosting
+Render.com (PaaS) — render.yaml con gunicorn
+CDN / Deploy alt.
+Vercel (configuración alternativa — vercel.json)
+CI/CD Pipeline
+GitHub Actions (.github/workflows/pipeline-ci-cd.yml)
+Control de versiones
+Git + GitHub (rama main protegida)
+Gestor dependencias
+pip + requirements.txt
+8. Pipeline CI/CD — GitHub Actions
+8.1 Plataforma utilizada: GitHub Actions
+GitHub Actions es la plataforma de integración y entrega continua integrada directamente en GitHub. Permite definir flujos de trabajo (workflows) en archivos YAML que se ejecutan automáticamente en respuesta a eventos del repositorio, como un push a la rama main. Fue elegida por su integración nativa con el repositorio, la disponibilidad de runners gratuitos (ubuntu-latest) y su ecosistema de actions reutilizables.
+El archivo de configuración del pipeline se encuentra en:
+📁 .github/workflows/pipeline-ci-cd.yml
+   Nombre del workflow: «Pipeline E-Commerce Purita»
+   Evento disparador: push a la rama main
+8.2 Pasos del Pipeline
+El pipeline sigue exactamente el esquema propuesto en la guía del curso (Ejemplo Práctico 1) y consta de 5 pasos automatizados secuenciales:
+1
+Descargar Código Fuente (Checkout)
+GitHub Actions clona el repositorio usando actions/checkout@v3 cada vez que se hace un push a main. Esto garantiza que el runner trabaje siempre con el código más reciente.
+2
+Compilar el Proyecto — Instalar Python y Dependencias
+Se configura Python 3.11 usando actions/setup-python@v4 y luego se ejecuta pip install -r requirements.txt para instalar todas las librerías declaradas (Django, Pillow, ReportLab, openpyxl, Cloudinary, etc.).
+3
+Ejecutar Pruebas — Django Checks y Migraciones
+Se ejecutan python manage.py check (validación de configuración y modelos) y python manage.py makemigrations --dry-run para verificar que no existan migraciones pendientes sin aplicar. Cualquier error aquí detiene el pipeline.
+4
+Generar Versión Lista para Producción (Collectstatic)
+Se ejecuta python manage.py collectstatic --noinput para recolectar todos los archivos estáticos (CSS, JS, imágenes) en la carpeta staticfiles/, que WhiteNoise servirá en producción.
+5
+Publicar en el Servidor — Despliegue a Vercel / Render
+Una vez validado todo, se confirma el despliegue. En producción real se ejecutaría npx vercel --prod --token $VERCEL_TOKEN o el webhook de Render, disparando el proceso definido en render.yaml (pip install, collectstatic, migrate, gunicorn).
+8.3 Configuración de Render (render.yaml)
+El archivo render.yaml define el servicio de hosting en Render.com con las siguientes instrucciones de build y arranque:
+buildCommand:
+   pip install -r requirements.txt
+   python manage.py collectstatic --no-input
+   python manage.py migrate
+startCommand:
+   gunicorn login.wsgi:application
+Variables de entorno gestionadas por Render:
+   SECRET_KEY (generada automáticamente)
+   DATABASE_URL (conexión a PostgreSQL del mismo servicio)
+   CLOUDINARY_CLOUD_NAME / API_KEY / API_SECRET
+   DEBUG=False  |  ALLOWED_HOSTS=.onrender.com
+9. Implementación del Sistema
+9.1 Módulo de Autenticación y Perfiles
+El sistema de autenticación está implementado con dos capas complementarias:
+Django Auth nativo: maneja el login/logout/register del frontend mediante vistas personalizadas (login_custom, register) y el sistema de sesiones de Django.
+auth_microservice: microservicio Python puro con arquitectura hexagonal que actúa como servicio independiente de verificación de credenciales, accesible a través del API Gateway local (ms_gateway.py).
+Perfil extendido: el modelo Perfil extiende al User de Django agregando cédula, número de contacto y foto de perfil con redimensionamiento automático a 300×300 px mediante Pillow.
+9.2 Módulo de Catálogo y Productos
+Modelo Producto: nombre, código único, precio, descripción, categoría (FK), cantidad en inventario, imagen y estado de disponibilidad.
+Las imágenes se redimensionan automáticamente a 686×386 px en el método save() del modelo usando Pillow, garantizando consistencia visual.
+En producción las imágenes se almacenan en Cloudinary vía django-cloudinary-storage.
+El administrador puede hacer CRUD completo desde el panel /admin/productos/.
+9.3 Módulo de Carrito de Compras
+Implementado en core/cart.py como clase Cart que opera sobre la sesión de Django (SESSION_ENGINE).
+Soporta agregar, incrementar, decrementar y eliminar productos, así como calcular el total.
+Rutas: /core/cart/, /core/cart/add/<id>/, /core/cart/remove/<id>/, /core/cart/decrease/<id>/, /core/cart/clear/.
+9.4 Módulo de Pedidos y Checkout
+El checkout captura: nombre, email, teléfono, dirección y método de pago del cliente.
+El pedido se crea con estado «pendiente» y puede avanzar por 6 estados gestionados desde el panel admin.
+Al confirmar el pago se genera automáticamente una Factura con CUFE de 64 caracteres (código único de factura electrónica conforme a estándares DIAN).
+9.5 Módulo de Facturación Electrónica
+La Factura almacena datos completos de empresa, cliente y DIAN:
+NIT, razón social, dirección, correo y teléfono de la empresa.
+Resolución DIAN y prefijo de factura (LP + número secuencial de 4 dígitos).
+CUFE de 64 caracteres generado con django.utils.crypto.get_random_string.
+Forma de pago (contado/crédito) y medio de pago (efectivo/transferencia/tarjeta).
+IVA calculado sobre el subtotal de los ítems del pedido.
+9.6 Módulo de Reportes
+Reporte diario de ventas accesible desde /admin/reporte-diario/.
+Exportación a PDF usando ReportLab (reporte_diario_pdf).
+Exportación a Excel usando openpyxl (reporte_diario_excel).
+9.7 Módulo de Auditoría
+Cada acción significativa del sistema queda registrada en el modelo Auditoria:
+Usuario y tipo (Admin / Cliente), acción, modelo afectado, objeto ID y fecha.
+Campos adicionales: producto, cantidad y detalle para operaciones de inventario.
+Visualizable en /admin/auditoria/ con filtros y exportación a Excel.
+10. Modelos de Datos (Base de Datos)
+La base de datos sigue el modelo relacional SQL con 9 entidades principales:
+Modelo
+Campos principales
+Perfil
+user (OneToOne), cedula, numero_contacto, foto_perfil
+Categoria
+nombre (único)
+Producto
+nombre, codigo (único), precio, descripcion, categoria (FK), cantidad, imagen, disponible
+Pedido
+usuario (FK), nombre, email, telefono, direccion, metodo_pago, fecha, total, estado
+PedidoItem
+pedido (FK), producto (FK), cantidad, precio → subtotal()
+Factura
+pedido (OneToOne), cliente (FK), fecha, subtotal, iva, total, nit_empresa, CUFE, forma_pago, medio_pago
+FacturaItem
+factura (FK), producto, cantidad, precio_unitario, subtotal
+Notificacion
+mensaje, producto (FK), fecha, leida
+Auditoria
+usuario (FK), tipo_usuario, accion, modelo_afectado, objeto_id, producto, cantidad, detalle, fecha
+11. Plataforma de Despliegue en la Nube
+11.1 Render.com (plataforma principal)
+Render es la plataforma PaaS (Platform as a Service) elegida como entorno principal de producción. Ofrece despliegue automático desde GitHub, base de datos PostgreSQL gestionada y variables de entorno seguras, todo en un plan gratuito adecuado para el alcance académico del proyecto.
+Tipo de servicio: Web Service con runtime Python.
+Build automático: cada push a main desencadena install → collectstatic → migrate.
+Arranque: gunicorn login.wsgi:application (servidor WSGI de producción).
+Base de datos PostgreSQL incluida como servicio vinculado (login-register-db).
+Variables de entorno: SECRET_KEY generada automáticamente, DATABASE_URL inyectada desde la BD, credenciales de Cloudinary en modo secreto (sync: false).
+11.2 Vercel (configuración alternativa)
+Se mantiene una configuración alternativa en vercel.json para despliegue serverless en Vercel, permitiendo flexibilidad en caso de migración. En el pipeline de GitHub Actions el paso 5 referencia el comando npx vercel --prod --token $VERCEL_TOKEN como opción activable.
+11.3 Cloudinary (gestión de medios)
+Las imágenes de productos y perfiles se almacenan en Cloudinary, un servicio CDN especializado en medios. La integración se realiza mediante django-cloudinary-storage y las credenciales se gestionan como variables de entorno en Render, garantizando que nunca queden expuestas en el repositorio.
+12. Integrantes del Equipo
+Rol
+Nombre y Contacto
+Frontend
+Kevin Camilo Molina Salazar
+molina.kevin@correounivalle.edu.co
+Backend
+Santiago Bedón Gómez
+santiago.bedon@correounivalle.edu.co
+Admin BD y Documentación
+Daniela Martínez Fontal
+daniela.fontal@correounivalle.edu.co
+Universidad del Valle  ·  Asignatura: Desarrollo de Software III  ·  2025

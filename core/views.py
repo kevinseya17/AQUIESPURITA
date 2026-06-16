@@ -82,7 +82,7 @@ from .models import Perfil, Pedido
 def perfil(request):
     user = request.user
 
-    # Intentar obtener el perfil asociado
+    # Intentar obtener el perfil asociadoooo
     try:
         perfil = user.perfil
     except Perfil.DoesNotExist:
